@@ -1,8 +1,17 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-static const unsigned int SCREEN_WIDTH = 800;
-static const unsigned int SCREEN_HEIGHT = 600;
+#include <stdbool.h>
+
+#include "gfx.h"
+
+struct Window
+{
+    GLFWwindow *handle;
+    unsigned int width;
+    unsigned int height;
+    bool keys[1024];
+};
 
 void window_create();
 void window_loop();
