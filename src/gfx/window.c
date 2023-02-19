@@ -6,13 +6,11 @@
 
 #include "gfx.h"
 
-struct Window window;
-
 static void _size_callback(GLFWwindow *handle, int width, int height)
 {
     glViewport(0, 0, width, height);
-    window.width = width;
-    window.height = height;
+    //window.width = width;
+    //window.height = height;
 }
 
 static void _key_callback(
@@ -30,16 +28,16 @@ static void _key_callback(
     {
         if (action == GLFW_PRESS)
         {
-            window.keys[key] = true;
+            //window.keys[key] = true;
         }
         else if (action == GLFW_RELEASE)
         {
-            window.keys[key] = false;
+            //window.keys[key] = false;
         }
     }
 }
 
-void window_create()
+Window* window_create()
 {
     if (!glfwInit())
     {
@@ -54,23 +52,30 @@ void window_create()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window.width = 800;
-    window.height = 600;
-    window.handle = glfwCreateWindow(
-            window.width,
-            window.height,
+    Window* window = (Window*) malloc(sizeof(Window));
+    if (window == NULL)
+    {
+        printf("Failed to allocate memory for window\n");
+        exit(-1);
+    }
+
+    window->width = 800;
+    window->height = 600;
+    window->handle = glfwCreateWindow(
+            window->width,
+            window->height,
             "Breakout OpenGL",
             NULL,
             NULL);
 
-    if (window.handle == NULL)
+    if (window->handle == NULL)
     {
         printf("Failed to create a GLFW window.\n");
         glfwTerminate();
         exit(-1);
     }
 
-    glfwMakeContextCurrent(window.handle);
+    glfwMakeContextCurrent(window->handle);
 
     // GLAD: load all OpenGL function pointers
     // ---------------------------------------
@@ -82,22 +87,30 @@ void window_create()
 
     // Callbacks
     // ---------
-    glfwSetKeyCallback(window.handle, _key_callback);
-    glfwSetFramebufferSizeCallback(window.handle, _size_callback);
+    glfwSetKeyCallback(window->handle, _key_callback);
+    glfwSetFramebufferSizeCallback(window->handle, _size_callback);
 
     // OpenGL Configuration
     // -------------------
-    glViewport(0, 0, window.width, window.height);
+    glViewport(0, 0, window->width, window->height);
     // TODO: Find out: this turns on alpha blending? (and what that is)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    return window;
 }
 
-void window_loop()
+void window_loop(Window* window)
 {
     // TODO
-    while (!glfwWindowShouldClose(window.handle))
+    while (!glfwWindowShouldClose(window->handle))
     {
         glfwPollEvents();
     }
+}
+
+void window_destroy(Window** window)
+{
+    free(*window);
+    *window = NULL;
 }
