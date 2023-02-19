@@ -15,10 +15,14 @@ all: $(BIN) $(BIN)/$(EXE)
 
 # Build library objects
 # ---------------------
-LIB_OBJ = lib/glad/src/glad.o
+LIB_OBJ = lib/glad/src/glad.o \
+		  lib/cglm/libcglm.a
 
 lib/glad/src/glad.o:
 	cd lib/glad && $(CC) -o src/glad.o -I include -c src/glad.c
+
+lib/cglm/libcglm.a:
+	cd lib/cglm && cmake . -DCGLM_STATIC=ON && make
 
 # Build objects
 # -------------
@@ -84,4 +88,4 @@ run: all
 
 .PHONY: clean
 clean:
-	rm -rf $(BIN) $(LIB_OBJ)
+	rm -rf $(BIN)
