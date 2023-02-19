@@ -1,34 +1,57 @@
+# VAR
+# -----
 CC = gcc
 CFLAGS = -std=c11 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter
 CFLAGS += -I lib/glad/include
-LDFLAGS = lib/glad/src/glad.o
 LDFLAGS += -lglfw
-
-SRC = $(wildcard src/**/*.c) $(wildcard src/*.c)
-OBJ = $(SRC:.c=.o)
 BIN = bin
+SRC = src
+EXE = breakout
 
-.PHONY: all clean
+.PHONY: all
+all: $(BIN) $(BIN)/$(EXE)
 
-all: dirs libs game
 
-dirs:
-	mkdir -p ./$(BIN)
+# Build library objects
+# ---------------------
+LIB_OBJ = lib/glad/src/glad.o
 
-libs:
+lib/glad/src/glad.o:
 	cd lib/glad && $(CC) -o src/glad.o -I include -c src/glad.c
 
-# $@ evaluates to target name; $< evaluates to the first prerequisite
-# $^ evaluates to all prerequisites
-%.o: %.c
+# Build objects
+# -------------
+OBJ = main.o \
+	  window.o
+
+MAIN_DEP = main.c \
+		   gfx/window.h \
+		   gfx/gfx.h
+$(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-game: $(OBJ)
-	$(CC) -o $(BIN)/game $^ $(LDFLAGS)
+WINDOW_DEP = gfx/window.c \
+		     gfx/window.h \
+			 gfx/gfx.h
+$(BIN)/window.o: $(addprefix $(SRC)/,$(WINDOW_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
 
+
+# Main targets + Util
+# -------------------
+# $@ evaluates to target name; $< evaluates to the first prerequisite
+# $^ evaluates to all prerequisites
+$(BIN)/$(EXE): $(addprefix $(BIN)/,$(OBJ)) $(LIB_OBJ)
+	$(CC) -o $(BIN)/$(EXE) $^ $(LDFLAGS)
+
+$(BIN):
+	mkdir -p $(BIN)
+
+.PHONY: run
 run: all
-	$(BIN)/game
+	$(BIN)/$(EXE)
 
+.PHONY: clean
 clean:
-	rm -rf $(BIN) $(OBJ)
+	rm -rf $(BIN) $(LIB_OBJ)
