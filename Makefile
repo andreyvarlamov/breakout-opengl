@@ -24,7 +24,8 @@ lib/glad/src/glad.o:
 # -------------
 OBJ = main.o \
 	  window.o \
-	  game.o
+	  game.o \
+	  shader.o
 
 MAIN_DEP = main.c \
 		   gfx/window.h \
@@ -44,6 +45,10 @@ GAME_DEP = game.c \
 $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
+SHADER_DEP = gfx/shader.c \
+			 gfx/shader.h
+$(BIN)/shader.o: $(addprefix $(SRC)/,$(SHADER_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util
 # -------------------
