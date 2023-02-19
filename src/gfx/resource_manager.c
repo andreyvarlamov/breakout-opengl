@@ -5,7 +5,7 @@
 
 #include "gfx.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
 
 #include "../util/file_io.h"
 #include "texture.h"
