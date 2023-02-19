@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "gfx.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -47,12 +46,6 @@ Texture2D _load_texture_from_file(const char* file, bool alpha)
 {
     Texture2D texture;
 
-    if (alpha)
-    {
-        texture.internal_format = GL_RGBA;
-        texture.image_format = GL_RGBA;
-    }
-
     int width, height, nr_channels;
     unsigned char* data = stbi_load(file, &width, &height, &nr_channels, 0);
 
@@ -60,7 +53,13 @@ Texture2D _load_texture_from_file(const char* file, bool alpha)
     // return a negative number for image size.
     // This function uses glTextImage2D, which copies data pointed to, so it's
     // safe to free the pointer with stbi_image_free.
-    texture2d_generate(&texture, width, height, data);
+    texture2d_generate(
+            &texture,
+            (unsigned int) width,
+            (unsigned int) height,
+            alpha,
+            data);
+
     stbi_image_free(data);
     return texture;
 }
