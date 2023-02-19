@@ -1,8 +1,15 @@
 #include "file_io.h"
 
-void read_file(const char* path, char* content)
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* read_file(const char* path)
 {
     FILE* f;
+    long len;
+    char* content;
 
     f = fopen(path, "rb");
     if (f == NULL)
@@ -20,4 +27,6 @@ void read_file(const char* path, char* content)
     fread(content, 1, len, f);
     assert(strlen(content) > 0);
     fclose(f);
+
+    return content;
 }
