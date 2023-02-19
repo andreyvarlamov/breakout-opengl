@@ -23,7 +23,8 @@ lib/glad/src/glad.o:
 # Build objects
 # -------------
 OBJ = main.o \
-	  window.o
+	  window.o \
+	  game.o
 
 MAIN_DEP = main.c \
 		   gfx/window.h \
@@ -33,8 +34,14 @@ $(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
 
 WINDOW_DEP = gfx/window.c \
 		     gfx/window.h \
-			 gfx/gfx.h
+			 gfx/gfx.h \
+			 game.h
 $(BIN)/window.o: $(addprefix $(SRC)/,$(WINDOW_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+GAME_DEP = game.c \
+		   game.h
+$(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 
