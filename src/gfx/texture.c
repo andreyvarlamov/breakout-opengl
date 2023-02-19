@@ -5,72 +5,65 @@
 
 #include "gfx.h"
 
-Texture2D* texture2d_create()
-{
-    Texture2D* texture2d = (Texture2D*) malloc(sizeof(Texture2D));
-    return texture2d;
-}
-
-void texture2d_destroy(Texture2D** texture2d)
-{
-    free(*texture2d);
-    *texture2d = NULL;
-}
-
-void texture2d_generate(
-        Texture2D* tex,
+GLuint texture2d_generate(
         unsigned int width,
         unsigned int height,
         bool alpha,
         unsigned char* data)
 {
-    // Set gl id for the texture
-    glGenTextures(1, &(tex->id));
+    GLuint id = 0;
+    unsigned int internal_format;
+    unsigned int image_format;
+    unsigned int wrap_s;
+    unsigned int wrap_t;
+    unsigned int filter_min;
+    unsigned int filter_mag;
 
-    tex->width = width;
-    tex->height = height;
+    // Set gl id for the texture
+    glGenTextures(1, &id);
 
     if (alpha)
     {
-        tex->internal_format = GL_RGBA;
-        tex->image_format = GL_RGBA;
+        internal_format = GL_RGBA;
+        image_format = GL_RGBA;
     }
     else
     {
-        tex->internal_format = GL_RGB;
-        tex->image_format = GL_RGB;
+        internal_format = GL_RGB;
+        image_format = GL_RGB;
     }
 
-    tex->wrap_s = GL_REPEAT;
-    tex->wrap_t = GL_REPEAT;
-    tex->filter_min = GL_LINEAR;
-    tex->filter_mag = GL_LINEAR;
+    wrap_s = GL_REPEAT;
+    wrap_t = GL_REPEAT;
+    filter_min = GL_LINEAR;
+    filter_mag = GL_LINEAR;
 
     // Create texture
-    glBindTexture(GL_TEXTURE_2D, tex->id);
+    glBindTexture(GL_TEXTURE_2D, id);
     glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            tex->internal_format,
-            tex->width,
-            tex->height,
+            internal_format,
+            width,
+            height,
             0,
-            tex->image_format,
+            image_format,
             GL_UNSIGNED_BYTE,
             data);
 
     // Set texture wrap and filter modes
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex->wrap_s);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex->wrap_t);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, tex->filter_min);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex->filter_mag);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag);
 
     // Unbind texture
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    return id;
 }
 
-void texture2d_bind(
-        const Texture2D* tex)
+void texture2d_bind(GLuint id)
 {
-    glBindTexture(GL_TEXTURE_2D, tex->id);
+    glBindTexture(GL_TEXTURE_2D, id);
 }

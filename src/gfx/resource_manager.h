@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "gfx.h"
+#include "tex_type.h"
 #include "texture.h"
 #include "shader.h"
 
@@ -21,13 +23,13 @@ Shader load_shader(
 Shader get_shader(const char* name);
 
 // Load and generate a texture from file
-Texture2D load_texture(
+void load_texture(
         const char* file,
         bool alpha,
-        const char* name);
+        TexType tex_type);
 
 // Retrieve a stored texture
-Texture2D get_texture(const char* name);
+GLuint get_texture(TexType tex_type);
 
 // Properly deallocate all loaded resources
 void clear();

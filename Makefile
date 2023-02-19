@@ -3,7 +3,7 @@
 CC = gcc
 CFLAGS = -std=c11 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter
-CFLAGS += -I lib/glad/include -I lib/stb
+CFLAGS += -I lib/glad/include -I lib/stb -I lib/cglm/include
 LDFLAGS += -lglfw -lm
 BIN = bin
 SRC = src

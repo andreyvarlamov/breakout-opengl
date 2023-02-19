@@ -7,11 +7,12 @@
 #include <stb_image.h>
 
 #include "../util/file_io.h"
+#include "gfx.h"
+#include "tex_type.h"
 #include "texture.h"
 #include "shader.h"
 
-//ShaderTable shader_table;
-//TextureTable texture_table;
+GLuint _tex_table[TEX_TYPE_COUNT];
 
 Shader _load_shader_from_file(
         const char* vShaderFile,
@@ -42,28 +43,6 @@ Shader _load_shader_from_file(
     return shader;
 }
 
-Texture2D _load_texture_from_file(const char* file, bool alpha)
-{
-    Texture2D texture;
-
-    int width, height, nr_channels;
-    unsigned char* data = stbi_load(file, &width, &height, &nr_channels, 0);
-
-    // Conversion signed int to unsigned should be safe, as stbi should never
-    // return a negative number for image size.
-    // This function uses glTextImage2D, which copies data pointed to, so it's
-    // safe to free the pointer with stbi_image_free.
-    texture2d_generate(
-            &texture,
-            (unsigned int) width,
-            (unsigned int) height,
-            alpha,
-            data);
-
-    stbi_image_free(data);
-    return texture;
-}
-
 Shader load_shader(
         const char* vShaderFile,
         const char* fShaderFile,
@@ -87,23 +66,36 @@ Shader get_shader(const char* name)
     return shader;
 }
 
-Texture2D load_texture(
-        const char* file,
-        bool alpha,
-        const char* name)
+GLuint _load_texture_from_file(const char* file, bool alpha)
 {
-    Texture2D texture2d = _load_texture_from_file(file, alpha);
+    int width, height, nr_channels;
+    unsigned char* data = stbi_load(file, &width, &height, &nr_channels, 0);
 
-    // texture_table_add(&texture_table, name, texture2d);
+    // Conversion signed int to unsigned should be safe, as stbi should never
+    // return a negative number for image size.
+    // This function uses glTextImage2D, which copies data pointed to, so it's
+    // safe to free the pointer with stbi_image_free.
+    GLuint id = texture2d_generate(
+            (unsigned int) width,
+            (unsigned int) height,
+            alpha,
+            data);
 
-    return texture2d;
+    stbi_image_free(data);
+    return id;
 }
 
-Texture2D get_texture(const char* name)
+void load_texture(
+        const char* file,
+        bool alpha,
+        TexType tex_type)
 {
-    //Texture2D texture2d = texture_table_get(&texture_table, name);
-    Texture2D texture2d;
-    return texture2d;
+    _tex_table[tex_type] = _load_texture_from_file(file, alpha);
+}
+
+GLuint get_texture(TexType tex_type)
+{
+    return _tex_table[tex_type];
 }
 
 void clear()
