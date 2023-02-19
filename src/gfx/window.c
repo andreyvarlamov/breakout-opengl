@@ -9,8 +9,15 @@
 static void _size_callback(GLFWwindow *handle, int width, int height)
 {
     glViewport(0, 0, width, height);
-    //window.width = width;
-    //window.height = height;
+
+    Window* window = (Window*) glfwGetWindowUserPointer(handle);
+    if (!window)
+    {
+        printf("Could not get window user pointer\n");
+    }
+
+    window->width = width;
+    window->height = height;
 }
 
 static void _key_callback(
@@ -20,6 +27,12 @@ static void _key_callback(
         int action,
         int mode)
 {
+    Window* window = (Window*) glfwGetWindowUserPointer(handle);
+    if (!window)
+    {
+        printf("Could not get window user pointer\n");
+    }
+
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(handle, true);
@@ -28,11 +41,11 @@ static void _key_callback(
     {
         if (action == GLFW_PRESS)
         {
-            //window.keys[key] = true;
+            window->keys[key] = true;
         }
         else if (action == GLFW_RELEASE)
         {
-            //window.keys[key] = false;
+            window->keys[key] = false;
         }
     }
 }
@@ -61,12 +74,22 @@ Window* window_create()
 
     window->width = 800;
     window->height = 600;
+
+    // Initialize keys array
+    for (int i = 0; i < 1024; ++i)
+    {
+        window->keys[i] = false;
+    }
+
     window->handle = glfwCreateWindow(
             window->width,
             window->height,
             "Breakout OpenGL",
             NULL,
             NULL);
+
+
+    glfwSetWindowUserPointer(window->handle, window);
 
     if (window->handle == NULL)
     {
