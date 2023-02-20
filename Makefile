@@ -54,12 +54,14 @@ $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 SHADER_DEP = gfx/shader.c \
-			 gfx/shader.h
+			 gfx/shader.h \
+			 gfx/gfx.h
 $(BIN)/shader.o: $(addprefix $(SRC)/,$(SHADER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 TEXTURE_DEP = gfx/texture.c \
-			  gfx/texture.h
+			  gfx/texture.h \
+			  gfx/gfx.h
 $(BIN)/texture.o: $(addprefix $(SRC)/,$(TEXTURE_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
@@ -69,7 +71,12 @@ $(BIN)/file_io.o: $(addprefix $(SRC)/,$(FILE_IO_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 RESOURCE_MANAGER_DEP = gfx/resource_manager.c \
-					   gfx/resource_manager.h
+					   gfx/resource_manager.h \
+					   gfx/gfx.h \
+					   gfx/tex_type.h \
+					   gfx/texture.h \
+					   gfx/shader_type.h \
+					   gfx/shader.h
 $(BIN)/resource_manager.o: $(addprefix $(SRC)/,$(RESOURCE_MANAGER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
