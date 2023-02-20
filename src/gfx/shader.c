@@ -6,21 +6,8 @@
 
 #include "gfx.h"
 
-Shader* shader_create()
+void use(GLuint shader_id)
 {
-    Shader* shader = (Shader*) malloc(sizeof(Shader));
-    return shader;
-}
-
-void shader_destroy(Shader** shader)
-{
-    free(*shader);
-    *shader = NULL;
-}
-
-Shader* use(Shader* shader)
-{
-    return shader;
 }
 
 void _check_compile_errors(unsigned int object, const char* type)
@@ -52,13 +39,13 @@ void _check_compile_errors(unsigned int object, const char* type)
     }
 }
 
-void shader_compile(
-        Shader* shader,
+GLuint shader_compile(
         const char* vertex_source,
         const char* fragment_source,
         const char* geometry_source)
 {
     unsigned int s_vertex, s_fragment, s_geometry;
+    GLuint shader_id;
 
     s_vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(s_vertex, 1, &vertex_source, NULL);
@@ -78,15 +65,15 @@ void shader_compile(
         _check_compile_errors(s_geometry, "GEOMETRY");
     }
 
-    shader->id = glCreateProgram();
-    glAttachShader(shader->id, s_vertex);
-    glAttachShader(shader->id, s_fragment);
+    shader_id = glCreateProgram();
+    glAttachShader(shader_id, s_vertex);
+    glAttachShader(shader_id, s_fragment);
     if (geometry_source)
     {
-        glAttachShader(shader->id, s_geometry);
+        glAttachShader(shader_id, s_geometry);
     }
-    glLinkProgram(shader->id);
-    _check_compile_errors(shader->id, "PROGRAM");
+    glLinkProgram(shader_id);
+    _check_compile_errors(shader_id, "PROGRAM");
 
     glDeleteShader(s_vertex);
     glDeleteShader(s_fragment);
@@ -94,10 +81,12 @@ void shader_compile(
     {
         glDeleteShader(s_geometry);
     }
+
+    return shader_id;
 }
 
 void shader_set_float(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float value,
         bool useShader)
@@ -105,7 +94,7 @@ void shader_set_float(
 }
 
 void shader_set_int(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         int value,
         bool useShader)
@@ -113,7 +102,7 @@ void shader_set_int(
 }
 
 void shader_set_vector2f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,
@@ -122,7 +111,7 @@ void shader_set_vector2f(
 }
 
 void shader_set_vector3f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,
@@ -132,7 +121,7 @@ void shader_set_vector3f(
 }
 
 void shader_set_vector4f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,

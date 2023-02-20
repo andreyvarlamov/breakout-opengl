@@ -10,11 +10,13 @@
 #include "gfx.h"
 #include "tex_type.h"
 #include "texture.h"
+#include "shader_type.h"
 #include "shader.h"
 
 GLuint _tex_table[TEX_TYPE_COUNT];
+GLuint _shader_table[SHADER_TYPE_COUNT];
 
-Shader _load_shader_from_file(
+GLuint _load_shader_from_file(
         const char* vShaderFile,
         const char* fShaderFile,
         const char* gShaderFile)
@@ -28,8 +30,7 @@ Shader _load_shader_from_file(
         gShaderCode = read_file(gShaderFile);
     }
 
-    Shader shader;
-    shader_compile(&shader, vShaderCode, fShaderCode, gShaderCode);
+    GLuint id = shader_compile(vShaderCode, fShaderCode, gShaderCode);
 
     free(vShaderCode);
     vShaderCode = NULL;
@@ -40,30 +41,23 @@ Shader _load_shader_from_file(
     free(gShaderCode);
     gShaderCode = NULL;
 
-    return shader;
+    return id;
 }
 
-Shader load_shader(
+GLuint load_shader(
         const char* vShaderFile,
         const char* fShaderFile,
         const char* gShaderFile,
-        const char* name)
+        ShaderType shader_type)
 {
-    Shader shader = _load_shader_from_file(
-            vShaderFile,
-            fShaderFile,
-            gShaderFile);
-
-    // shader_table_add(&shader_table, name, shader);
-
-    return shader;
+    GLuint id = _load_shader_from_file(vShaderFile, fShaderFile, gShaderFile);
+    _shader_table[shader_type] = id;
+    return id;
 }
 
-Shader get_shader(const char* name)
+GLuint get_shader(ShaderType shader_type)
 {
-    //Shader shader = shader_table_get(&shader_table, name);
-    Shader shader;
-    return shader;
+    return _shader_table[shader_type];
 }
 
 GLuint _load_texture_from_file(const char* file, bool alpha)
@@ -85,12 +79,14 @@ GLuint _load_texture_from_file(const char* file, bool alpha)
     return id;
 }
 
-void load_texture(
+GLuint load_texture(
         const char* file,
         bool alpha,
         TexType tex_type)
 {
-    _tex_table[tex_type] = _load_texture_from_file(file, alpha);
+    GLuint id = _load_texture_from_file(file, alpha);
+    _tex_table[tex_type] = id;
+    return id;
 }
 
 GLuint get_texture(TexType tex_type)

@@ -3,46 +3,39 @@
 
 #include <stdbool.h>
 
-typedef struct Shader
-{
-    unsigned int id;
-} Shader;
-
-Shader* shader_create();
-void shader_destroy(Shader** shader);
+#include "gfx.h"
 
 // Sets the current shader as active
-Shader* use(Shader* shader);
+void use(GLuint shader_id);
 
 // Compile the shader from given source code
-void shader_compile(
-        Shader* shader,
+GLuint shader_compile(
         const char* vertex_source,
         const char* fragment_source,
         const char* geometry_source);
 
 // Utility functions
 void shader_set_float(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float value,
         bool useShader);
 
 void shader_set_int(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         int value,
         bool useShader);
 
 void shader_set_vector2f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,
         bool useShader);
 
 void shader_set_vector3f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,
@@ -50,7 +43,7 @@ void shader_set_vector3f(
         bool useShader);
 
 void shader_set_vector4f(
-        Shader* shader,
+        GLuint shader_id,
         const char* name,
         float x,
         float y,
