@@ -72,4 +72,11 @@ void sprite_draw(
 
     shader_uniform_mat4(shader_id, "model", model);
     shader_uniform_vec3(shader_id, "color", color);
+
+    glActiveTexture(GL_TEXTURE0);
+    texture2d_bind(get_texture(tex_type));
+
+    glBindVertexArray(_quad_vao);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
 }
