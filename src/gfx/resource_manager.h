@@ -9,9 +9,6 @@
 #include "shader_type.h"
 #include "shader.h"
 
-//extern ShaderTable shader_table;
-//extern TextureTable texture_table;
-
 // Load and generate a shader program from file loading vertex, fragment (and
 // geometry) shader's source code.
 GLuint load_shader(

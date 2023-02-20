@@ -81,7 +81,11 @@ $(BIN)/resource_manager.o: $(addprefix $(SRC)/,$(RESOURCE_MANAGER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 RENDERER_DEP = gfx/renderer.c \
-			   gfx/renderer.h
+			   gfx/renderer.h \
+			   gfx/gfx.h \
+			   gfx/shader_type.h \
+			   gfx/shader.h \
+			   gfx/resource_manager.h
 $(BIN)/renderer.o: $(addprefix $(SRC)/,$(RENDERER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 

@@ -4,7 +4,7 @@
 #define SHADER_TYPE_COUNT 8
 typedef enum
 {
-    SHADER_SPRITE,
+    SHADER_QUAD,
     SHADER_TEST,
 } ShaderType;
 

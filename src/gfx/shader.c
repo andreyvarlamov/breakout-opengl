@@ -6,8 +6,9 @@
 
 #include "gfx.h"
 
-void use(GLuint shader_id)
+void shader_use(GLuint shader_id)
 {
+    glUseProgram(shader_id);
 }
 
 void _check_compile_errors(unsigned int object, const char* type)

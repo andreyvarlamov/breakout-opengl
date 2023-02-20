@@ -6,7 +6,7 @@
 #include "gfx.h"
 
 // Sets the current shader as active
-void use(GLuint shader_id);
+void shader_use(GLuint shader_id);
 
 // Compile the shader from given source code
 GLuint shader_compile(
