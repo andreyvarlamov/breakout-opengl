@@ -85,6 +85,8 @@ RENDERER_DEP = gfx/renderer.c \
 			   gfx/gfx.h \
 			   gfx/shader_type.h \
 			   gfx/shader.h \
+			   gfx/tex_type.h \
+			   gfx/texture.h \
 			   gfx/resource_manager.h
 $(BIN)/renderer.o: $(addprefix $(SRC)/,$(RENDERER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)

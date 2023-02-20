@@ -86,6 +86,18 @@ GLuint shader_compile(
     return shader_id;
 }
 
+void shader_uniform_mat4(GLuint shader_id, const char* name, mat4 mat)
+{
+    GLint location = glGetUniformLocation(shader_id, name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, (float *) mat);
+}
+
+void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec)
+{
+    GLint location = glGetUniformLocation(shader_id, name);
+    glUniform3fv(location, 1, vec);
+}
+
 void shader_set_float(
         GLuint shader_id,
         const char* name,

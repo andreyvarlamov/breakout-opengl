@@ -1,8 +1,12 @@
 #include "renderer.h"
 
+#include <cglm/cglm.h>
+
 #include "gfx.h"
 #include "shader_type.h"
 #include "shader.h"
+#include "tex_type.h"
+#include "texture.h"
 #include "resource_manager.h"
 
 GLuint _quad_vao;
@@ -46,7 +50,26 @@ void quad_init_render_data()
     glBindVertexArray(0);
 }
 
-void sprite_draw()
+void sprite_draw(
+        TexType tex_type,
+        vec2 position,
+        vec2 size,
+        float rotate,
+        vec3 color)
 {
-    shader_use(get_shader(SHADER_QUAD));
+    GLuint shader_id = get_shader(SHADER_QUAD);
+    shader_use(shader_id);
+
+    mat4 model;
+    glm_mat4_identity(model);
+
+    glm_translate(model, (vec3) { position[0], position[1], 0.0f });
+    glm_translate(model, (vec3) { 0.5f * size[0], 0.5f * size[1], 0.0f });
+    glm_rotate(model, rotate, (vec3) { 0.0f, 0.0f, 1.0f });
+    glm_translate(model, (vec3) { -0.5f * size[0], -0.5f * size[1], 0.0f });
+
+    glm_scale(model, (vec3) { size[0], size[1], 1.0f });
+
+    shader_uniform_mat4(shader_id, "model", model);
+    shader_uniform_vec3(shader_id, "color", color);
 }

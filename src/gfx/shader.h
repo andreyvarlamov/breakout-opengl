@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include <cglm/cglm.h>
+
 #include "gfx.h"
 
 // Sets the current shader as active
@@ -15,6 +17,9 @@ GLuint shader_compile(
         const char* geometry_source);
 
 // Utility functions
+void shader_uniform_mat4(GLuint shader_id, const char* name, mat4 mat);
+void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec);
+
 void shader_set_float(
         GLuint shader_id,
         const char* name,
