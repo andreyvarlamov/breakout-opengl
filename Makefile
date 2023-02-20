@@ -32,7 +32,8 @@ OBJ = main.o \
 	  shader.o \
 	  texture.o \
 	  file_io.o \
-	  resource_manager.o
+	  resource_manager.o \
+	  renderer.o
 
 MAIN_DEP = main.c \
 		   gfx/window.h \
@@ -58,18 +59,23 @@ $(BIN)/shader.o: $(addprefix $(SRC)/,$(SHADER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 TEXTURE_DEP = gfx/texture.c \
-			 gfx/texture.h
+			  gfx/texture.h
 $(BIN)/texture.o: $(addprefix $(SRC)/,$(TEXTURE_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 FILE_IO_DEP = util/file_io.c \
-			 util/file_io.h
+			  util/file_io.h
 $(BIN)/file_io.o: $(addprefix $(SRC)/,$(FILE_IO_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 RESOURCE_MANAGER_DEP = gfx/resource_manager.c \
-			 gfx/resource_manager.h
+					   gfx/resource_manager.h
 $(BIN)/resource_manager.o: $(addprefix $(SRC)/,$(RESOURCE_MANAGER_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+RENDERER_DEP = gfx/renderer.c \
+			   gfx/renderer.h
+$(BIN)/renderer.o: $(addprefix $(SRC)/,$(RENDERER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util
