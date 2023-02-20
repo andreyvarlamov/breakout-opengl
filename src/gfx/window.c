@@ -82,8 +82,6 @@ Window* window_create()
         window->keys[i] = false;
     }
 
-    window->game = game_create();
-
     window->handle = glfwCreateWindow(
             window->width,
             window->height,
@@ -137,7 +135,6 @@ void window_loop(Window* window)
 
 void window_destroy(Window** window)
 {
-    game_destroy(&((*window)->game));
     free(*window);
     *window = NULL;
 }

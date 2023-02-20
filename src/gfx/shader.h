@@ -19,6 +19,7 @@ GLuint shader_compile(
 // Utility functions
 void shader_uniform_mat4(GLuint shader_id, const char* name, mat4 mat);
 void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec);
+void shader_uniform_int (GLuint shader_id, const char* name, int  num);
 
 void shader_set_float(
         GLuint shader_id,

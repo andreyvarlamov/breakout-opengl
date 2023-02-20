@@ -49,7 +49,14 @@ $(BIN)/window.o: $(addprefix $(SRC)/,$(WINDOW_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 GAME_DEP = game.c \
-		   game.h
+		   game.h \
+		   gfx/gfx.h \
+		   gfx/renderer.h \
+		   gfx/resource_manager.h \
+		   gfx/shader_type.h \
+		   gfx/shader.h \
+		   gfx/tex_type.h \
+		   gfx/window.h
 $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 

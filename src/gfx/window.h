@@ -3,13 +3,11 @@
 
 #include <stdbool.h>
 
-#include "../game.h"
 #include "gfx.h"
 
 typedef struct Window
 {
     GLFWwindow* handle;
-    Game* game;
     unsigned int width;
     unsigned int height;
     bool keys[1024];

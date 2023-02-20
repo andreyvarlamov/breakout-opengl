@@ -98,6 +98,12 @@ void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec)
     glUniform3fv(location, 1, vec);
 }
 
+void shader_uniform_int(GLuint shader_id, const char* name, int num)
+{
+    GLint location = glGetUniformLocation(shader_id, name);
+    glUniform1i(location, num);
+}
+
 void shader_set_float(
         GLuint shader_id,
         const char* name,
