@@ -18,9 +18,6 @@ typedef struct Game
     bool keys[1024];
 } Game;
 
-Game* game_create();
-void game_destroy(Game** game);
-
 // Initialize game state (load all shaders/textures/levels)
 void game_init(Game* game, unsigned int width, unsigned int height);
 

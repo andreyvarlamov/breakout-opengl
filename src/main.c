@@ -91,9 +91,33 @@ int main(int argc, char *argv[])
 
     // Main Loop
     // ---------
+    float delta_time = 0.0f;
+    float last_frame = 0.0f;
+
     while (!glfwWindowShouldClose(window))
     {
+        // Calculate delta time
+        // --------------------
+        float current_frame = glfwGetTime();
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
         glfwPollEvents();
+
+        // Manage user input
+        // -----------------
+        game_process_input(&_game, delta_time);
+
+        // Update game state
+        // -----------------
+        game_update(&_game, delta_time);
+
+        // Render
+        // ------
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        game_render(&_game);
+
+        glfwSwapBuffers(window);
     }
 
     glfwTerminate();
