@@ -22,11 +22,12 @@ void game_init(Game* game, unsigned int width, unsigned int height)
     game->width = width;
     game->height = height;
     game->state = GAME_ACTIVE;
-    // TODO
-    return;
 
-    GLuint shader
-        = load_shader("shaders/quad.vs", "shaders/quad.fs", NULL, SHADER_QUAD);
+    GLuint shader = load_shader(
+            "res/shaders/quad.vs",
+            "res/shaders/quad.fs",
+            NULL,
+            SHADER_QUAD);
 
     mat4 projection;
     glm_ortho(

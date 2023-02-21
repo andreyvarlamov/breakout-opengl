@@ -71,7 +71,7 @@ void sprite_draw(
     glm_scale(model, (vec3) { size[0], size[1], 1.0f });
 
     shader_uniform_mat4(shader_id, "model", model);
-    shader_uniform_vec3(shader_id, "color", color);
+    shader_uniform_vec3(shader_id, "sprite_color", color);
 
     glActiveTexture(GL_TEXTURE0);
     texture2d_bind(get_texture(tex_type));
