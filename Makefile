@@ -32,15 +32,16 @@ OBJ = main.o \
 	  texture.o \
 	  file_io.o \
 	  resource_manager.o \
-	  renderer.o
+	  renderer.o \
+	  game_object.o
 
 MAIN_DEP = main.c \
 		   gfx/gfx.h
 $(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-GAME_DEP = game.c \
-		   game.h \
+GAME_DEP = game/game.c \
+		   game/game.h \
 		   gfx/gfx.h \
 		   gfx/renderer.h \
 		   gfx/resource_manager.h \
@@ -86,6 +87,12 @@ RENDERER_DEP = gfx/renderer.c \
 			   gfx/texture.h \
 			   gfx/resource_manager.h
 $(BIN)/renderer.o: $(addprefix $(SRC)/,$(RENDERER_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+GAME_OBJECT_DEP = game/game_object.c \
+				  game/game_object.h \
+				  gfx/tex_type.h
+$(BIN)/game_object.o: $(addprefix $(SRC)/,$(GAME_OBJECT_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util

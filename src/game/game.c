@@ -5,12 +5,12 @@
 
 #include <cglm/cglm.h>
 
-#include "gfx/gfx.h"
-#include "gfx/renderer.h"
-#include "gfx/resource_manager.h"
-#include "gfx/shader_type.h"
-#include "gfx/shader.h"
-#include "gfx/tex_type.h"
+#include "../gfx/gfx.h"
+#include "../gfx/renderer.h"
+#include "../gfx/resource_manager.h"
+#include "../gfx/shader_type.h"
+#include "../gfx/shader.h"
+#include "../gfx/tex_type.h"
 
 void game_init(Game* game, unsigned int width, unsigned int height)
 {
