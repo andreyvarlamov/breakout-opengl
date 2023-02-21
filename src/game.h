@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "gfx/window.h"
+#include <stdbool.h>
 
 typedef enum GameState
 {
@@ -13,14 +13,16 @@ typedef enum GameState
 typedef struct Game
 {
     GameState state;
-    Window* window;
+    unsigned int width;
+    unsigned int height;
+    bool keys[1024];
 } Game;
 
-Game* game_create(Window* window);
+Game* game_create();
 void game_destroy(Game** game);
 
 // Initialize game state (load all shaders/textures/levels)
-void game_init(Game* game);
+void game_init(Game* game, unsigned int width, unsigned int height);
 
 // Game loop
 void game_process_input(Game* game, float dt);

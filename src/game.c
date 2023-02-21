@@ -11,33 +11,28 @@
 #include "gfx/shader_type.h"
 #include "gfx/shader.h"
 #include "gfx/tex_type.h"
-#include "gfx/window.h"
 
-
-Game* game_create(Window* window)
+void game_init(Game* game, unsigned int width, unsigned int height)
 {
-    Game* game = (Game*) malloc(sizeof(Game*));
+    for (int i = 0; i < 1024; ++i)
+    {
+        game->keys[i] = false;
+    }
+
+    game->width = width;
+    game->height = height;
     game->state = GAME_ACTIVE;
-    game->window = window;
-    return game;
-}
+    // TODO
+    return;
 
-void game_destroy(Game** game)
-{
-    free(*game);
-    *game = NULL;
-}
-
-void game_init(Game* game)
-{
     GLuint shader
         = load_shader("shaders/quad.vs", "shaders/quad.fs", NULL, SHADER_QUAD);
 
     mat4 projection;
     glm_ortho(
             0.0f,
-            (float) game->window->width,
-            (float) game->window->height,
+            (float) game->width,
+            (float) game->height,
             0.0f,
             -1.0f,
             1.0f,

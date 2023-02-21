@@ -27,7 +27,6 @@ lib/cglm/libcglm.a:
 # Build objects
 # -------------
 OBJ = main.o \
-	  window.o \
 	  game.o \
 	  shader.o \
 	  texture.o \
@@ -36,16 +35,8 @@ OBJ = main.o \
 	  renderer.o
 
 MAIN_DEP = main.c \
-		   gfx/window.h \
 		   gfx/gfx.h
 $(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
-	$(CC) -o $@ -c $< $(CFLAGS)
-
-WINDOW_DEP = gfx/window.c \
-		     gfx/window.h \
-			 gfx/gfx.h \
-			 game.h
-$(BIN)/window.o: $(addprefix $(SRC)/,$(WINDOW_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 GAME_DEP = game.c \
@@ -55,8 +46,7 @@ GAME_DEP = game.c \
 		   gfx/resource_manager.h \
 		   gfx/shader_type.h \
 		   gfx/shader.h \
-		   gfx/tex_type.h \
-		   gfx/window.h
+		   gfx/tex_type.h
 $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
