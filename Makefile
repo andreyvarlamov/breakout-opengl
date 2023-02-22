@@ -33,7 +33,8 @@ OBJ = main.o \
 	  file_io.o \
 	  resource_manager.o \
 	  renderer.o \
-	  game_object.o
+	  game_object.o \
+	  game_level.o
 
 MAIN_DEP = main.c \
 		   gfx/gfx.h
@@ -47,7 +48,8 @@ GAME_DEP = game/game.c \
 		   gfx/resource_manager.h \
 		   gfx/shader_type.h \
 		   gfx/shader.h \
-		   gfx/tex_type.h
+		   gfx/tex_type.h \
+		   game/game_level.h
 $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
@@ -93,6 +95,12 @@ GAME_OBJECT_DEP = game/game_object.c \
 				  game/game_object.h \
 				  gfx/tex_type.h
 $(BIN)/game_object.o: $(addprefix $(SRC)/,$(GAME_OBJECT_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+GAME_LEVEL_DEP = game/game_level.c \
+				 game/game_level.h \
+				 util/file_io.h
+$(BIN)/game_level.o: $(addprefix $(SRC)/,$(GAME_LEVEL_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util

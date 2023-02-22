@@ -29,8 +29,8 @@ GameObject* _add_brick(GameLevel* game_level, GameObject game_object)
     }
 
     memcpy(
-            game_level->bricks[game_level->bricks_tot-1],
-            game_object,
+            &game_level->bricks[game_level->bricks_tot-1],
+            &game_object,
             sizeof(GameObject));
 
     ++(game_level->bricks_tot);
@@ -60,7 +60,7 @@ unsigned int* _read_from_file(
     {
         if (file_content[i] != '\n')
         {
-            tile_types[i] = atoi(file_content[i]);
+            tile_types[i] = atoi(&file_content[i]);
             if (is_first_row)
             {
                 ++row_size;
