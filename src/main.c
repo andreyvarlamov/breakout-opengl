@@ -120,6 +120,8 @@ int main(int argc, char *argv[])
         glfwSwapBuffers(window);
     }
 
+    game_clean(&_game);
+
     glfwTerminate();
     return 0;
 }

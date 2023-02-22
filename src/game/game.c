@@ -11,9 +11,6 @@
 #include "../gfx/shader_type.h"
 #include "../gfx/shader.h"
 #include "../gfx/tex_type.h"
-#include "game_level.h"
-
-GameLevel _game_level;
 
 void game_init(Game* game, unsigned int width, unsigned int height)
 {
@@ -53,7 +50,7 @@ void game_init(Game* game, unsigned int width, unsigned int height)
     load_texture("res/textures/block_solid.png", false, TEX_BLOCK_SOLID);
     load_texture("res/textures/background.png", false, TEX_BACKGROUND);
 
-    game_level_load(&_game_level, "res/levels/one.lvl", width, height / 2);
+    game_level_load(&game->game_level, "res/levels/one.lvl", width, height / 2);
 }
 
 void game_process_input(Game* game, float dt)
@@ -75,5 +72,10 @@ void game_render(Game* game)
         (vec3) { 1.0f, 1.0f, 1.0f });
 
     // Render game level
-    game_level_draw(&_game_level);
+    game_level_draw(&game->game_level);
+}
+
+void game_clean(Game* game)
+{
+    game_level_clean(&game->game_level);
 }

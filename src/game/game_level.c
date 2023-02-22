@@ -192,3 +192,8 @@ void game_level_draw(GameLevel* game_level)
         }
     }
 }
+
+void game_level_clean(GameLevel* game_level)
+{
+    _clean_bricks(game_level);
+}

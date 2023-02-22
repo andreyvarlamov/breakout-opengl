@@ -22,4 +22,7 @@ void game_level_load(
 // Render level
 void game_level_draw(GameLevel* game_level);
 
+// Clean up game level data
+void game_level_clean(GameLevel* game_level);
+
 #endif
