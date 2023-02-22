@@ -8,6 +8,7 @@ typedef enum
     TEX_FACE,
     TEX_BLOCK,
     TEX_BLOCK_SOLID,
+    TEX_BACKGROUND,
     TEX_TEST
 } TexType;
 

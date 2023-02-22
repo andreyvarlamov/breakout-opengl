@@ -51,6 +51,7 @@ void game_init(Game* game, unsigned int width, unsigned int height)
     load_texture("res/textures/awesomeface.png", true, TEX_FACE);
     load_texture("res/textures/block.png", false, TEX_BLOCK);
     load_texture("res/textures/block_solid.png", false, TEX_BLOCK_SOLID);
+    load_texture("res/textures/background.png", false, TEX_BACKGROUND);
 
     game_level_load(&_game_level, "res/levels/one.lvl", width, height / 2);
 }
@@ -63,13 +64,16 @@ void game_update(Game* game, float dt)
 {
 }
 
-void game_render()
+void game_render(Game* game)
 {
+    // Render background
     sprite_draw(
-        TEX_FACE,
-        (vec2) { 200.0f, 200.0f },
-        (vec2) { 300.0f, 400.0f },
-        45.0f,
-        (vec3) { 0.0f, 1.0f, 0.0f });
+        TEX_BACKGROUND,
+        (vec2) { 0.0f, 0.0f },
+        (vec2) { game->width, game->height },
+        0.0f,
+        (vec3) { 1.0f, 1.0f, 1.0f });
+
+    // Render game level
     game_level_draw(&_game_level);
 }
