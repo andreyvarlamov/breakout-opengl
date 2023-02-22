@@ -30,7 +30,7 @@ GameObject* _add_brick(GameLevel* game_level, GameObject game_object)
     }
 
     memcpy(
-            &game_level->bricks[game_level->bricks_tot-1],
+            &game_level->bricks[game_level->bricks_tot],
             &game_object,
             sizeof(GameObject));
 
@@ -52,23 +52,35 @@ unsigned int* _read_from_file(
         size_t* row_size_out)
 {
     char* file_content = read_file(file);
-    size_t tile_num = strlen(file_content);
+    size_t char_num = strlen(file_content);
+    size_t tile_num = 0;
+    for (size_t char_iter = 0; char_iter < char_num; ++char_iter)
+    {
+        if (file_content[char_iter] != '\n')
+        {
+            ++tile_num;
+        }
+    }
+
     unsigned int* tile_types = calloc(1, tile_num * sizeof(unsigned int));
 
     size_t row_size = 0;
     bool is_first_row = true;
-    for (size_t i = 0; i < tile_num; ++i)
+    size_t tile_iter = 0;
+    for (size_t char_iter = 0; char_iter < char_num; ++char_iter)
     {
-        if (file_content[i] != '\n')
+        if (file_content[char_iter] != '\n')
         {
-            int num = file_content[i] - '0';
-            tile_types[i] = num;
+            int num = file_content[char_iter] - '0';
+            tile_types[tile_iter] = num;
+            ++tile_iter;
+
             if (is_first_row)
             {
                 ++row_size;
             }
         }
-        else
+        else if (is_first_row)
         {
             is_first_row = false;
         }
@@ -122,7 +134,7 @@ void _init_level(
             }
             else if (tile_types[i] == 3)
             {
-                glm_vec3_copy((vec3) { 0.0f, 0.6f, 1.0f }, color);
+                glm_vec3_copy((vec3) { 0.0f, 0.7f, 0.0f }, color);
             }
             else if (tile_types[i] == 4)
             {
@@ -166,7 +178,7 @@ void game_level_load(
 
 void game_level_draw(GameLevel* game_level)
 {
-    for (int i = 0; i < game_level->bricks_tot; i++)
+    for (size_t i = 0; i < game_level->bricks_tot; i++)
     {
         if (!game_level->bricks[i].destroyed)
         {
