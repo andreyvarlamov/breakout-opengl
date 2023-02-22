@@ -8,6 +8,7 @@ LDFLAGS += -lglfw -lm
 BIN = bin
 SRC = src
 EXE = breakout
+GDB_SCRIPT = gdb-script
 
 .PHONY: all
 all: $(BIN) $(BIN)/$(EXE)
@@ -117,6 +118,10 @@ $(BIN):
 .PHONY: run
 run: all
 	$(BIN)/$(EXE)
+
+.PHONY: debug
+debug: all
+	gdb -x $(GDB_SCRIPT) -tui
 
 .PHONY: clean
 clean:

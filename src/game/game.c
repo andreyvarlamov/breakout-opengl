@@ -65,5 +65,11 @@ void game_update(Game* game, float dt)
 
 void game_render()
 {
+    sprite_draw(
+        TEX_FACE,
+        (vec2) { 200.0f, 200.0f },
+        (vec2) { 300.0f, 400.0f },
+        45.0f,
+        (vec3) { 0.0f, 1.0f, 0.0f });
     game_level_draw(&_game_level);
 }
