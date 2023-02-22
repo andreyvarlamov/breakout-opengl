@@ -99,6 +99,7 @@ $(BIN)/game_object.o: $(addprefix $(SRC)/,$(GAME_OBJECT_DEP))
 
 GAME_LEVEL_DEP = game/game_level.c \
 				 game/game_level.h \
+				 gfx/renderer.h \
 				 util/file_io.h
 $(BIN)/game_level.o: $(addprefix $(SRC)/,$(GAME_LEVEL_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)

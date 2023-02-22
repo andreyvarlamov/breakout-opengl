@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "game_object.h"
+#include "../gfx/renderer.h"
 #include "../util/file_io.h"
 
 void _init_bricks(GameLevel* game_level)
@@ -60,7 +61,8 @@ unsigned int* _read_from_file(
     {
         if (file_content[i] != '\n')
         {
-            tile_types[i] = atoi(&file_content[i]);
+            int num = file_content[i] - '0';
+            tile_types[i] = num;
             if (is_first_row)
             {
                 ++row_size;
@@ -164,4 +166,17 @@ void game_level_load(
 
 void game_level_draw(GameLevel* game_level)
 {
+    for (int i = 0; i < game_level->bricks_tot; i++)
+    {
+        if (!game_level->bricks[i].destroyed)
+        {
+            GameObject brick = game_level->bricks[i];
+            sprite_draw(
+                    brick.tex_type,
+                    brick.position,
+                    brick.size,
+                    brick.rotation,
+                    brick.color);
+        }
+    }
 }
