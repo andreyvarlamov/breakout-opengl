@@ -50,7 +50,31 @@ void game_init(Game* game, unsigned int width, unsigned int height)
     load_texture("res/textures/block_solid.png", false, TEX_BLOCK_SOLID);
     load_texture("res/textures/background.png", false, TEX_BACKGROUND);
 
-    game_level_load(&game->game_level, "res/levels/one.lvl", width, height / 2);
+    game_level_load(
+        &game->game_levels[0],
+        "res/levels/one.lvl",
+        width,
+        height / 2);
+
+    game_level_load(
+        &game->game_levels[1],
+        "res/levels/two.lvl",
+        width,
+        height / 2);
+
+    game_level_load(
+        &game->game_levels[2],
+        "res/levels/three.lvl",
+        width,
+        height / 2);
+
+    game_level_load(
+        &game->game_levels[3],
+        "res/levels/four.lvl",
+        width,
+        height / 2);
+
+    game->current_level = 0;
 }
 
 void game_process_input(Game* game, float dt)
@@ -72,10 +96,10 @@ void game_render(Game* game)
         (vec3) { 1.0f, 1.0f, 1.0f });
 
     // Render game level
-    game_level_draw(&game->game_level);
+    game_level_draw(&game->game_levels[game->current_level]);
 }
 
 void game_clean(Game* game)
 {
-    game_level_clean(&game->game_level);
+    game_level_clean(&game->game_levels[game->current_level]);
 }

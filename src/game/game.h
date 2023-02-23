@@ -5,6 +5,8 @@
 
 #include "game_level.h"
 
+#define GAME_LEVEL_NUM 4
+
 typedef enum GameState
 {
     GAME_ACTIVE,
@@ -18,7 +20,8 @@ typedef struct Game
     unsigned int width;
     unsigned int height;
     bool keys[1024];
-    GameLevel game_level;
+    GameLevel game_levels[GAME_LEVEL_NUM];
+    size_t current_level;
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)
