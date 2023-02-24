@@ -22,6 +22,7 @@ typedef struct Game
     bool keys[1024];
     GameLevel game_levels[GAME_LEVEL_NUM];
     size_t current_level;
+    GameObject player;
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)
