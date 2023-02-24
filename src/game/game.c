@@ -98,6 +98,27 @@ void game_init( Game* game, unsigned int width, unsigned int height )
 
 void game_process_input( Game* game, float dt )
 {
+    if (game->state == GAME_ACTIVE)
+    {
+        float velocity = PLAYER_VELOCITY * dt;
+
+        if (game->keys[GLFW_KEY_A])
+        {
+            game->player.position[0] -= velocity;
+            if (game->player.position[0] < 0.0f)
+            {
+                game->player.position[0] = 0.0f;
+            }
+        }
+        if (game->keys[GLFW_KEY_D])
+        {
+            game->player.position[0] += velocity;
+            if (game->player.position[0] > game->width - game->player.size[0])
+            {
+                game->player.position[0] = game->width - game->player.size[0];
+            }
+        }
+    }
 }
 
 void game_update( Game* game, float dt )
