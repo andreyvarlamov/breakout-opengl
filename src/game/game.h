@@ -4,6 +4,8 @@
 #include <stdbool.h>
 
 #include "game_level.h"
+#include "game_object.h"
+#include "ball_object.h"
 
 #define GAME_LEVEL_NUM 4
 
@@ -23,6 +25,7 @@ typedef struct Game
     GameLevel game_levels[GAME_LEVEL_NUM];
     size_t current_level;
     GameObject player;
+    BallObject ball;
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)

@@ -15,6 +15,8 @@
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
 #define PLAYER_VELOCITY 500.0f
+#define BALL_RADIUS 12.5f
+#define BALL_INIT_VEL (vec2) { 100.0f, -350.0f }
 
 void game_init( Game* game, unsigned int width, unsigned int height )
 {
@@ -87,42 +89,84 @@ void game_init( Game* game, unsigned int width, unsigned int height )
 
     game->current_level = 0;
 
+    vec2 player_pos = {
+        (width / 2.0f) - (PLAYER_WIDTH / 2.0f),
+        height - PLAYER_HEIGHT
+    };
+
     game->player = game_object_create(
-        (vec2) { (width / 2.0f) - (PLAYER_WIDTH / 2.0f), height - PLAYER_HEIGHT },
+        player_pos,
         (vec2) { PLAYER_WIDTH, PLAYER_HEIGHT },
         (vec2) { 0.0f, 0.0f },
         (vec3) { 1.0f, 1.0f, 1.0f },
         TEX_PADDLE
     );
+
+    vec2 ball_pos;
+    glm_vec2_add(
+        player_pos,
+        (vec2) { (PLAYER_WIDTH / 2.0f) - BALL_RADIUS, -BALL_RADIUS * 2.0f },
+        ball_pos
+    );
+
+    game->ball = ball_object_create(
+        ball_pos,
+        BALL_INIT_VEL,
+        BALL_RADIUS
+    );
 }
 
 void game_process_input( Game* game, float dt )
 {
-    if (game->state == GAME_ACTIVE)
+    if ( game->state == GAME_ACTIVE )
     {
         float velocity = PLAYER_VELOCITY * dt;
 
-        if (game->keys[GLFW_KEY_A])
+        if ( game->keys[GLFW_KEY_A] )
         {
-            game->player.position[0] -= velocity;
-            if (game->player.position[0] < 0.0f)
+            if ( game->player.position[0] >= 0.0f )
             {
-                game->player.position[0] = 0.0f;
+                game->player.position[0] -= velocity;
+
+                if ( game->ball.stuck )
+                {
+                    game->ball.d.position[0] -= velocity;
+                }
             }
+
+            // if ( game->player.position[0] < 0.0f )
+            // {
+            //     game->player.position[0] = 0.0f;
+            // }
         }
-        if (game->keys[GLFW_KEY_D])
+        if ( game->keys[GLFW_KEY_D] )
         {
-            game->player.position[0] += velocity;
-            if (game->player.position[0] > game->width - game->player.size[0])
+            if ( game->player.position[0] <= game->width - game->player.size[0] )
             {
-                game->player.position[0] = game->width - game->player.size[0];
+                game->player.position[0] += velocity;
+
+                if ( game->ball.stuck )
+                {
+                    game->ball.d.position[0] += velocity;
+                }
             }
+
+            // if ( game->player.position[0] > game->width - game->player.size[0] )
+            // {
+            //     game->player.position[0] = game->width - game->player.size[0];
+            // }
+        }
+
+        if ( game->keys[GLFW_KEY_SPACE] )
+        {
+            game->ball.stuck = false;
         }
     }
 }
 
 void game_update( Game* game, float dt )
 {
+    ball_object_move( &game->ball, dt, game->width );
 }
 
 void game_render( Game* game )
@@ -139,13 +183,22 @@ void game_render( Game* game )
     // Render game level
     game_level_draw( &game->game_levels[game->current_level] );
 
-    // Render player
+    // Render player paddle
     sprite_draw(
         game->player.tex_type,
         game->player.position,
         game->player.size,
         game->player.rotation,
         game->player.color
+    );
+
+    // Render the ball
+    sprite_draw(
+        game->ball.d.tex_type,
+        game->ball.d.position,
+        game->ball.d.size,
+        game->ball.d.rotation,
+        game->ball.d.color
     );
 }
 
