@@ -16,7 +16,7 @@ void _init_bricks(GameLevel* game_level)
     game_level->bricks_cap = BRICKS_INIT_CAP;
 }
 
-GameObject* _add_brick(GameLevel* game_level, GameObject game_object)
+void _add_brick(GameLevel* game_level, GameObject game_object)
 {
     // Double the capacity of allocated memory if ran out of previously
     // allocated memory
@@ -35,8 +35,6 @@ GameObject* _add_brick(GameLevel* game_level, GameObject game_object)
             sizeof(GameObject));
 
     ++(game_level->bricks_tot);
-
-    return &game_level->bricks[game_level->bricks_tot-2];
 }
 
 void _clean_bricks(GameLevel* game_level)
