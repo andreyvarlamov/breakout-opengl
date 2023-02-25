@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -169,8 +170,11 @@ void _do_collisions( Game* game )
             // Collision detection
             // -------------------
             Collision col = col_check_circ_rect( game->ball, bricks[i] );
-            if ( col.is )
+            if ( col.is && !game->ball.resolving_collision )
             {
+
+                game->ball.resolving_collision = true;
+
                 // Destroy block if not solid
                 // --------------------------
                 if ( !bricks[i].is_solid )
@@ -210,6 +214,10 @@ void _do_collisions( Game* game )
                         game->ball.d.position[1] += penetration;
                     }
                 }
+            }
+            else if ( !col.is && game->ball.resolving_collision )
+            {
+                game->ball.resolving_collision = false;
             }
         }
     }
