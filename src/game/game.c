@@ -23,7 +23,7 @@
 
 void game_init( Game* game, unsigned int width, unsigned int height )
 {
-    for (int i = 0; i < 1024; ++i)
+    for ( int i = 0; i < 1024; ++i )
     {
         game->keys[i] = false;
     }
@@ -42,8 +42,8 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     mat4 projection;
     glm_ortho(
         0.0f,
-        (float) game->width,
-        (float) game->height,
+        ( float ) game->width,
+        ( float ) game->height,
         0.0f,
         -1.0f,
         1.0f,
@@ -93,22 +93,22 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     game->current_level = 0;
 
     vec2 player_pos = {
-        (width / 2.0f) - (PLAYER_WIDTH / 2.0f),
+        ( width / 2.0f ) - ( PLAYER_WIDTH / 2.0f ),
         height - PLAYER_HEIGHT
     };
 
     game->player = game_object_create(
         player_pos,
-        (vec2) { PLAYER_WIDTH, PLAYER_HEIGHT },
-        (vec2) { 0.0f, 0.0f },
-        (vec3) { 1.0f, 1.0f, 1.0f },
+        ( vec2 ) { PLAYER_WIDTH, PLAYER_HEIGHT },
+        ( vec2 ) { 0.0f, 0.0f },
+        ( vec3 ) { 1.0f, 1.0f, 1.0f },
         TEX_PADDLE
     );
 
     vec2 ball_pos;
     glm_vec2_add(
         player_pos,
-        (vec2) { (PLAYER_WIDTH / 2.0f) - BALL_RADIUS, -BALL_RADIUS * 2.0f },
+        ( vec2 ) { ( PLAYER_WIDTH / 2.0f ) - BALL_RADIUS, -BALL_RADIUS * 2.0f },
         ball_pos
     );
 
@@ -136,11 +136,6 @@ void game_process_input( Game* game, float dt )
                     game->ball.d.position[0] -= velocity;
                 }
             }
-
-            // if ( game->player.position[0] < 0.0f )
-            // {
-            //     game->player.position[0] = 0.0f;
-            // }
         }
         if ( game->keys[GLFW_KEY_D] )
         {
@@ -153,11 +148,6 @@ void game_process_input( Game* game, float dt )
                     game->ball.d.position[0] += velocity;
                 }
             }
-
-            // if ( game->player.position[0] > game->width - game->player.size[0] )
-            // {
-            //     game->player.position[0] = game->width - game->player.size[0];
-            // }
         }
 
         if ( game->keys[GLFW_KEY_SPACE] )
@@ -176,25 +166,27 @@ void _do_collisions( Game* game )
     {
         if ( !bricks[i].destroyed )
         {
-            Collision col = col_check_circ_rect( &game->ball, &bricks[i] );
-            if (col.is)
+            // Collision detection
+            // -------------------
+            Collision col = col_check_circ_rect( game->ball, bricks[i] );
+            if ( col.is )
             {
                 // Destroy block if not solid
                 // --------------------------
-                if (!bricks[i].is_solid)
+                if ( !bricks[i].is_solid )
                 {
                     bricks[i].destroyed = true;
                 }
 
                 // Collision resolution
                 // --------------------
-                if (col.dir == LEFT || col.dir == RIGHT) // horizontal col
+                if ( col.dir == LEFT || col.dir == RIGHT ) // horizontal col
                 {
                     game->ball.d.velocity[0] = -game->ball.d.velocity[0];
 
-                    float penetration = game->ball.radius - fabs(col.diff[0]);
+                    float penetration = game->ball.radius - fabs( col.diff[0] );
 
-                    if (col.dir == LEFT)
+                    if ( col.dir == LEFT )
                     {
                         game->ball.d.position[0] += penetration;
                     }
@@ -207,9 +199,9 @@ void _do_collisions( Game* game )
                 {
                     game->ball.d.velocity[1] = -game->ball.d.velocity[1];
 
-                    float penetration = game->ball.radius - fabs(col.diff[1]);
+                    float penetration = game->ball.radius - fabs( col.diff[1] );
 
-                    if (col.dir == UP)
+                    if ( col.dir == UP )
                     {
                         game->ball.d.position[1] -= penetration;
                     }
@@ -237,6 +229,7 @@ void game_update( Game* game, float dt )
 void game_render( Game* game )
 {
     // Render background
+    // -----------------
     sprite_draw(
         TEX_BACKGROUND,
         (vec2) { 0.0f, 0.0f },
@@ -246,9 +239,11 @@ void game_render( Game* game )
     );
 
     // Render game level
+    // -----------------
     game_level_draw( &game->game_levels[game->current_level] );
 
     // Render player paddle
+    // --------------------
     sprite_draw(
         game->player.tex_type,
         game->player.position,
@@ -258,6 +253,7 @@ void game_render( Game* game )
     );
 
     // Render the ball
+    // ---------------
     sprite_draw(
         game->ball.d.tex_type,
         game->ball.d.position,
@@ -269,5 +265,8 @@ void game_render( Game* game )
 
 void game_clean( Game* game )
 {
-    game_level_clean( &game->game_levels[game->current_level] );
+    for ( size_t i = 0; i < GAME_LEVEL_NUM; i++ )
+    {
+        game_level_clean( &game->game_levels[i] );
+    }
 }

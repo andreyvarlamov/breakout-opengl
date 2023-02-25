@@ -7,24 +7,22 @@
 #include "ball_object.h"
 #include "game_object.h"
 
-bool col_check_rects(
-    const GameObject* one,
-    const GameObject* two
-)
+bool col_check_rects( GameObject one, GameObject two )
 {
     // X-axis
     // ------
-    bool col_x = (one->position[0] + one->size[0] >= two->position[0])
-              && (two->position[0] + two->size[0] >= one->position[0]);
+    bool col_x = ( one.position[0] + one.size[0] >= two.position[0] )
+              && ( two.position[0] + two.size[0] >= one.position[0] );
 
     // Y-axis
     // ------
-    bool col_y = (one->position[1] + one->size[1] >= two->position[1])
-              && (two->position[1] + two->size[1] >= one->position[1]);
+    bool col_y = ( one.position[1] + one.size[1] >= two.position[1] )
+              && ( two.position[1] + two.size[1] >= one.position[1] );
 
     return col_x && col_y;
 }
 
+// Get the cardinal direction of a vector using dot product
 Direction _get_vec_dir( vec2 target )
 {
     vec2 compass[] = {
@@ -51,19 +49,16 @@ Direction _get_vec_dir( vec2 target )
     return (Direction) best_match;
 }
 
-Collision col_check_circ_rect(
-    const BallObject* circ,
-    const GameObject* rect
-)
+Collision col_check_circ_rect( BallObject circ, GameObject rect )
 {
     vec2 circ_center;
-    glm_vec2_adds( circ->d.position, circ->radius, circ_center );
+    glm_vec2_adds( circ.d.position, circ.radius, circ_center );
 
     vec2 rect_half_extents;
-    glm_vec2_scale( rect->size, 0.5f, rect_half_extents );
+    glm_vec2_scale( rect.size, 0.5f, rect_half_extents );
 
     vec2 rect_center;
-    glm_vec2_add( rect->position, rect_half_extents, rect_center );
+    glm_vec2_add( rect.position, rect_half_extents, rect_center );
 
     // Calculate the diff vec between ball center and rect center
     // ----------------------------------------------------------
@@ -101,7 +96,7 @@ Collision col_check_circ_rect(
 
     Collision col = { 0 };
 
-    if ( dist < circ->radius )
+    if ( dist < circ.radius )
     {
         col.is = true;
         col.dir = _get_vec_dir( diff2 );

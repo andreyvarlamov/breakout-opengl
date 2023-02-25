@@ -12,9 +12,9 @@ BallObject ball_object_create(
 
     ball.d = game_object_create(
         pos,
-        (vec2) { radius * 2.0f, radius * 2.0f },
+        ( vec2 ) { radius * 2.0f, radius * 2.0f },
         velocity,
-        (vec3) { 1.0f, 1.0f, 1.0f },
+        ( vec3 ) { 1.0f, 1.0f, 1.0f },
         TEX_FACE
     );
 
