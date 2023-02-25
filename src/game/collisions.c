@@ -25,7 +25,33 @@ bool col_check_rects(
     return col_x && col_y;
 }
 
-bool col_check_circ_rect(
+Direction _get_vec_dir( vec2 target )
+{
+    vec2 compass[] = {
+        {  0.0f,  1.0f }, // up
+        {  1.0f,  0.0f }, // right
+        {  1.0f, -1.0f }, // down
+        { -1.0f,  0.0f }  // left
+    };
+
+    float max = 0.0f;
+    unsigned int best_match = -1;
+    for ( unsigned int i = 0; i < 4; i++ )
+    {
+        vec2 target_n;
+        glm_vec2_normalize_to( target, target_n );
+        float dot_p = glm_vec2_dot( target_n, compass[i] );
+        if ( dot_p > max )
+        {
+            max = dot_p;
+            best_match = i;
+        }
+    }
+
+    return (Direction) best_match;
+}
+
+Collision col_check_circ_rect(
     const BallObject* circ,
     const GameObject* rect
 )
@@ -73,6 +99,14 @@ bool col_check_circ_rect(
     // If that distance is less than ball radius -> collision
     // ------------------------------------------------------
 
-    bool collision = dist < circ->radius;
-    return collision;
+    Collision col = { 0 };
+
+    if ( dist < circ->radius )
+    {
+        col.is = true;
+        col.dir = _get_vec_dir( diff2 );
+        glm_vec2_copy( diff2, col.diff );
+    }
+
+    return col;
 }

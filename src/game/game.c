@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -171,15 +172,51 @@ void _do_collisions( Game* game )
     GameObject* bricks = game->game_levels[game->current_level].bricks;
     size_t brick_count = game->game_levels[game->current_level].bricks_tot;
 
-    for (size_t i = 0; i < brick_count; i++)
+    for ( size_t i = 0; i < brick_count; i++ )
     {
-        if (!bricks[i].destroyed)
+        if ( !bricks[i].destroyed )
         {
-            if (col_check_circ_rect( &game->ball, &bricks[i] ))
+            Collision col = col_check_circ_rect( &game->ball, &bricks[i] );
+            if (col.is)
             {
+                // Destroy block if not solid
+                // --------------------------
                 if (!bricks[i].is_solid)
                 {
                     bricks[i].destroyed = true;
+                }
+
+                // Collision resolution
+                // --------------------
+                if (col.dir == LEFT || col.dir == RIGHT) // horizontal col
+                {
+                    game->ball.d.velocity[0] = -game->ball.d.velocity[0];
+
+                    float penetration = game->ball.radius - fabs(col.diff[0]);
+
+                    if (col.dir == LEFT)
+                    {
+                        game->ball.d.position[0] += penetration;
+                    }
+                    else
+                    {
+                        game->ball.d.position[0] -= penetration;
+                    }
+                }
+                else // vertical col
+                {
+                    game->ball.d.velocity[1] = -game->ball.d.velocity[1];
+
+                    float penetration = game->ball.radius - fabs(col.diff[1]);
+
+                    if (col.dir == UP)
+                    {
+                        game->ball.d.position[1] -= penetration;
+                    }
+                    else
+                    {
+                        game->ball.d.position[1] += penetration;
+                    }
                 }
             }
         }
