@@ -24,10 +24,11 @@ typedef struct GameObject
 
 GameObject game_object_create_default();
 GameObject game_object_create(
-        vec2 pos,
-        vec2 size,
-        vec2 velocity,
-        vec3 color,
-        TexType tex_type);
+    vec2 pos,
+    vec2 size,
+    vec2 velocity,
+    vec3 color,
+    TexType tex_type
+);
 
 #endif

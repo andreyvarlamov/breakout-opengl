@@ -36,7 +36,8 @@ OBJ = main.o \
 	  renderer.o \
 	  game_object.o \
 	  game_level.o \
-	  ball_object.o
+	  ball_object.o \
+	  collisions.o
 
 MAIN_DEP = main.c \
 		   gfx/gfx.h
@@ -53,7 +54,8 @@ GAME_DEP = game/game.c \
 		   gfx/tex_type.h \
 		   game/game_level.h \
 		   game/game_object.h \
-		   game/ball_object.h
+		   game/ball_object.h \
+		   game/collisions.h
 $(BIN)/game.o: $(addprefix $(SRC)/,$(GAME_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
@@ -112,6 +114,13 @@ BALL_OBJECT_DEP = game/ball_object.c \
 				  game/ball_object.h \
 				  game/game_object.h
 $(BIN)/ball_object.o: $(addprefix $(SRC)/,$(BALL_OBJECT_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+COLLISIONS_DEP = game/collisions.c \
+				  game/collisions.h \
+				  game/ball_object.h \
+				  game/game_object.h
+$(BIN)/collisions.o: $(addprefix $(SRC)/,$(COLLISIONS_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util

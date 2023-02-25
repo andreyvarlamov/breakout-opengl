@@ -11,12 +11,14 @@
 #include "../gfx/shader_type.h"
 #include "../gfx/shader.h"
 #include "../gfx/tex_type.h"
+#include "collisions.h"
 
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
 #define PLAYER_VELOCITY 500.0f
 #define BALL_RADIUS 12.5f
 #define BALL_INIT_VEL (vec2) { 100.0f, -350.0f }
+//#define BALL_INIT_VEL (vec2) { 0.0f, -100.0f }
 
 void game_init( Game* game, unsigned int width, unsigned int height )
 {
@@ -164,9 +166,35 @@ void game_process_input( Game* game, float dt )
     }
 }
 
+void _do_collisions( Game* game )
+{
+    GameObject* bricks = game->game_levels[game->current_level].bricks;
+    size_t brick_count = game->game_levels[game->current_level].bricks_tot;
+
+    for (size_t i = 0; i < brick_count; i++)
+    {
+        if (!bricks[i].destroyed)
+        {
+            if (col_check_circ_rect( &game->ball, &bricks[i] ))
+            {
+                if (!bricks[i].is_solid)
+                {
+                    bricks[i].destroyed = true;
+                }
+            }
+        }
+    }
+}
+
 void game_update( Game* game, float dt )
 {
+    // Update objects
+    // --------------
     ball_object_move( &game->ball, dt, game->width );
+
+    // Check for collisions
+    // --------------------
+    _do_collisions( game );
 }
 
 void game_render( Game* game )

@@ -29,12 +29,14 @@ typedef struct Game
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)
-void game_init(Game* game, unsigned int width, unsigned int height);
+// --------------------------------------------------------
+void game_init( Game* game, unsigned int width, unsigned int height );
 
 // Game loop
-void game_process_input(Game* game, float dt);
-void game_update(Game* game, float dt);
-void game_render(Game* game);
-void game_clean(Game* game);
+// ---------
+void game_process_input( Game* game, float dt );
+void game_update( Game* game, float dt );
+void game_render( Game* game );
+void game_clean( Game* game );
 
 #endif
