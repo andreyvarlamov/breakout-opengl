@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "game/game.h"
 #include "gfx/gfx.h"
@@ -90,6 +91,10 @@ int main( int argc, char *argv[] )
     // Game data init
     // --------------
     game_init( &_game, SCREEN_WIDTH, SCREEN_HEIGHT );
+
+    // Initialize RNG
+    // --------------
+    srand( ( unsigned ) time(NULL) );
 
     // Main Loop
     // ---------
