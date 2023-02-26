@@ -37,7 +37,8 @@ OBJ = main.o \
 	  game_object.o \
 	  game_level.o \
 	  ball_object.o \
-	  collisions.o
+	  collisions.o \
+	  particle_manager.o
 
 MAIN_DEP = main.c \
 		   gfx/gfx.h
@@ -117,10 +118,15 @@ $(BIN)/ball_object.o: $(addprefix $(SRC)/,$(BALL_OBJECT_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 COLLISIONS_DEP = game/collisions.c \
-				  game/collisions.h \
-				  game/ball_object.h \
-				  game/game_object.h
+				 game/collisions.h \
+				 game/ball_object.h \
+				 game/game_object.h
 $(BIN)/collisions.o: $(addprefix $(SRC)/,$(COLLISIONS_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+PARTICLE_MANAGER_DEP = game/particle_manager.c \
+					   game/particle_manager.h
+$(BIN)/particle_manager.o: $(addprefix $(SRC)/,$(PARTICLE_MANAGER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util
