@@ -195,12 +195,7 @@ void renderer_particle_init( unsigned int game_width, unsigned int game_height )
     shader_use ( 0 );
 }
 
-void renderer_particle_draw(
-    TexType tex_type,
-    vec2 positions[],
-    vec4 colors[],
-    size_t count
-)
+void renderer_particle_draw_prepare( TexType tex_type )
 {
     GLuint shader_id = rm_shader_get( SHADER_PARTICLE );
     shader_use( shader_id );
@@ -212,14 +207,19 @@ void renderer_particle_draw(
     GLuint tex = rm_tex_get( tex_type );
     glActiveTexture( GL_TEXTURE0 );
     texture2d_bind( tex );
+}
 
-    for ( size_t i = 0; i < count; i++ )
-    {
-        shader_uniform_vec2( shader_id, "offset", positions[i] );
-        shader_uniform_vec4( shader_id, "particle_color", colors[i] );
-        glDrawArrays ( GL_TRIANGLES, 0, 6 );
-    }
+void renderer_particle_draw_do( vec2 position, vec4 color )
+{
+    GLuint shader_id = rm_shader_get( SHADER_PARTICLE );
+    shader_uniform_vec2( shader_id, "offset", position );
+    shader_uniform_vec4( shader_id, "particle_color", color );
+    glDrawArrays ( GL_TRIANGLES, 0, 6 );
+}
 
+void renderer_particle_draw_end()
+{
+    // Unbind VAO
     glBindVertexArray( 0 );
 
     // Reset to default blending mode

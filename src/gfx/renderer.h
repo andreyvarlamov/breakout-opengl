@@ -30,11 +30,21 @@ void renderer_particle_init(
     unsigned int game_height
 );
 
-void renderer_particle_draw(
-    TexType tex_type,
-    vec2 positions[],
-    vec4 colors[],
-    size_t count
-);
+/*****************************************************************************
+ * The idea behind splitting into 3 actions is that there will always be
+ * many particles being drawn, so no need to set and unset OpenGL state before
+ * and after drawing each particle.
+ * But still want to separate the particulars of Particle logic calculation
+ * (e.g. life and position), and the particulars of rendering in OpenGL.
+ *****************************************************************************/
+
+// Bind particle shader, texture, vao
+void renderer_particle_draw_prepare( TexType tex_type );
+
+// Draw each particle separately
+void renderer_particle_draw_do( vec2 position, vec4 color );
+
+// Unbind particle shader, texture, vao
+void renderer_particle_draw_end();
 
 #endif

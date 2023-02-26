@@ -8,10 +8,15 @@
 #include "../gfx/renderer.h"
 #include "../gfx/tex_type.h"
 
-vec2* _pos;
-vec2* _vel;
-vec4* _color;
-float* _life;
+Particle* _particles;
+
+static Particle _particle_create()
+{
+    // Color should be init to white (1.0f) -> no shade
+    Particle par = { 0 };
+    glm_vec4_copy( GLM_VEC4_ONE, par.color );
+    return par;
+}
 
 size_t _prev_unused_particle = 0;
 // Get first particle with life <= 0.0f
@@ -21,7 +26,7 @@ static size_t _first_unused_particle()
     // -------------------------------------------------------------------
     for ( size_t i = _prev_unused_particle + 1; i < PARTICLE_NUM; i++ )
     {
-        if ( _life[i] <= 0.0f )
+        if ( _particles[i].life <= 0.0f )
         {
             _prev_unused_particle = i;
             return i;
@@ -32,7 +37,7 @@ static size_t _first_unused_particle()
     // --------------------------------------------
     for (size_t i = 0; i < _prev_unused_particle + 1; i++ )
     {
-        if ( _life[i] <= 0.0f )
+        if ( _particles[i].life <= 0.0f )
         {
             _prev_unused_particle = i;
             return i;
@@ -55,43 +60,37 @@ static void _respawn_particle( size_t i, GameObject* obj, vec2 offset )
     float rand_color = 0.5f + ( ( rand() % 100 ) / 100.0f );
     vec2 rand_offset;
     glm_vec2_adds( offset, random, rand_offset );
-    glm_vec2_add( obj->position, rand_offset, _pos[i] );
+    glm_vec2_add( obj->position, rand_offset, _particles[i].pos );
 
     // Set color
     // ---------
     glm_vec4_copy(
         ( vec4 ) { rand_color, rand_color, rand_color, 1.0f },
-        _color[i]
+        _particles[i].color
     );
 
     // Set life
     // --------
-    _life[i] = 1.0f;
+    _particles[i].life = 1.0f;
 
     // Set velocity
-    glm_vec2_scale( obj->velocity, 0.1f, _vel[i] );
+    glm_vec2_scale( obj->velocity, 0.1f, _particles[i].vel );
 }
 
 void pm_init()
 {
-    _pos =   ( vec2* )  calloc( 1, sizeof( vec2 )  * PARTICLE_NUM );
-    _vel =   ( vec2* )  calloc( 1, sizeof( vec2 )  * PARTICLE_NUM );
-    _color = ( vec4* )  calloc( 1, sizeof( vec4 )  * PARTICLE_NUM );
-    _life =  ( float* ) calloc( 1, sizeof( float ) * PARTICLE_NUM );
+    _particles = ( Particle* ) calloc( 1, sizeof (Particle ) * PARTICLE_NUM );
 
-    // Color should be init to white (1.0f) -> no shade
     for ( size_t i = 0; i < PARTICLE_NUM; i++ )
     {
-        glm_vec4_copy(GLM_VEC4_ONE, _color[i]);
+        Particle par = _particle_create();
+        memcpy( &_particles[i], &par, sizeof( Particle ) );
     }
 }
 
 void pm_clean()
 {
-    free(_pos);
-    free(_vel);
-    free(_color);
-    free(_life);
+    free(_particles);
 }
 
 void pm_update(
@@ -113,21 +112,31 @@ void pm_update(
     // --------------------
     for ( size_t i = 0; i < PARTICLE_NUM; i++ )
     {
-        _life[i] -= dt;
-        if ( _life[i] > 0.0f )
+        _particles[i].life -= dt;
+        if ( _particles[i].life > 0.0f )
         {
             // Particle is still alive
             // -----------------------
             vec2 scaled_vel;
-            glm_vec2_scale( _vel[i], dt, scaled_vel );
-            glm_vec2_sub( _pos[i], scaled_vel, _pos[i] );
+            glm_vec2_scale( _particles[i].vel, dt, scaled_vel );
+            glm_vec2_sub( _particles[i].pos, scaled_vel, _particles[i].pos );
             // Fade out by reducing alpha channel
-            _color[i][3] -= dt * 2.5f;
+            _particles[i].color[3] -= dt * 2.5f;
         }
     }
 }
 
 void pm_draw()
 {
-    renderer_particle_draw(TEX_PARTICLE, _pos, _color, PARTICLE_NUM);
+    renderer_particle_draw_prepare( TEX_PARTICLE );
+
+    for ( size_t i = 0; i < PARTICLE_NUM; i++ )
+    {
+        if ( _particles[i].life > 0.0f )
+        {
+            renderer_particle_draw_do( _particles[i].pos, _particles[i].color );
+        }
+    }
+
+    renderer_particle_draw_end();
 }
