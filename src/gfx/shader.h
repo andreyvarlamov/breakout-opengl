@@ -17,44 +17,10 @@ GLuint shader_compile(
         const char* geometry_source);
 
 // Utility functions
-void shader_uniform_mat4(GLuint shader_id, const char* name, mat4 mat);
-void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec);
-void shader_uniform_int (GLuint shader_id, const char* name, int  num);
-
-void shader_set_float(
-        GLuint shader_id,
-        const char* name,
-        float value,
-        bool useShader);
-
-void shader_set_int(
-        GLuint shader_id,
-        const char* name,
-        int value,
-        bool useShader);
-
-void shader_set_vector2f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        bool useShader);
-
-void shader_set_vector3f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        float z,
-        bool useShader);
-
-void shader_set_vector4f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        float z,
-        float w,
-        bool useShader);
+void shader_uniform_mat4( GLuint shader_id, const char* name, mat4 mat );
+void shader_uniform_vec2( GLuint shader_id, const char* name, vec2 vec );
+void shader_uniform_vec3( GLuint shader_id, const char* name, vec3 vec );
+void shader_uniform_vec4( GLuint shader_id, const char* name, vec4 vec );
+void shader_uniform_int ( GLuint shader_id, const char* name, int  num );
 
 #endif

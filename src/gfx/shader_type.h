@@ -5,6 +5,7 @@
 typedef enum
 {
     SHADER_QUAD,
+    SHADER_PARTICLE,
     SHADER_TEST,
 } ShaderType;
 

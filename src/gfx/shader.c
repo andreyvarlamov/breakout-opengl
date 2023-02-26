@@ -86,66 +86,32 @@ GLuint shader_compile(
     return shader_id;
 }
 
-void shader_uniform_mat4(GLuint shader_id, const char* name, mat4 mat)
+void shader_uniform_mat4( GLuint shader_id, const char* name, mat4 mat )
 {
-    GLint location = glGetUniformLocation(shader_id, name);
-    glUniformMatrix4fv(location, 1, GL_FALSE, (float *) mat);
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniformMatrix4fv( location, 1, GL_FALSE, ( float * ) mat );
 }
 
-void shader_uniform_vec3(GLuint shader_id, const char* name, vec3 vec)
+void shader_uniform_vec2( GLuint shader_id, const char* name, vec2 vec )
 {
-    GLint location = glGetUniformLocation(shader_id, name);
-    glUniform3fv(location, 1, vec);
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniform2fv( location, 1, vec );
 }
 
-void shader_uniform_int(GLuint shader_id, const char* name, int num)
+void shader_uniform_vec3( GLuint shader_id, const char* name, vec3 vec )
 {
-    GLint location = glGetUniformLocation(shader_id, name);
-    glUniform1i(location, num);
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniform3fv( location, 1, vec );
 }
 
-void shader_set_float(
-        GLuint shader_id,
-        const char* name,
-        float value,
-        bool useShader)
+void shader_uniform_vec4( GLuint shader_id, const char* name, vec4 vec )
 {
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniform4fv( location, 1, vec );
 }
 
-void shader_set_int(
-        GLuint shader_id,
-        const char* name,
-        int value,
-        bool useShader)
+void shader_uniform_int( GLuint shader_id, const char* name, int num )
 {
-}
-
-void shader_set_vector2f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        bool useShader)
-{
-}
-
-void shader_set_vector3f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        float z,
-        bool useShader)
-{
-}
-
-void shader_set_vector4f(
-        GLuint shader_id,
-        const char* name,
-        float x,
-        float y,
-        float z,
-        float w,
-        bool useShader)
-{
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniform1i( location, num );
 }
