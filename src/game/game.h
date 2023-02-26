@@ -8,6 +8,7 @@
 #include "ball_object.h"
 
 #define GAME_LEVEL_NUM 4
+#define STARTING_LEVEL 0
 
 typedef enum GameState
 {

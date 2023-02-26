@@ -26,9 +26,9 @@ bool col_check_rects( GameObject one, GameObject two )
 Direction _get_vec_dir( vec2 target )
 {
     vec2 compass[] = {
-        {  0.0f,  1.0f }, // up
+        {  0.0f, -1.0f }, // up
         {  1.0f,  0.0f }, // right
-        {  1.0f, -1.0f }, // down
+        {  0.0f,  1.0f }, // down
         { -1.0f,  0.0f }  // left
     };
 

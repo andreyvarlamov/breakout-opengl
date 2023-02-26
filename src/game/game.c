@@ -91,7 +91,7 @@ void game_init( Game* game, unsigned int width, unsigned int height )
         height / 2
     );
 
-    game->current_level = 0;
+    game->current_level = STARTING_LEVEL;
 
     vec2 player_pos = {
         ( width / 2.0f ) - ( PLAYER_WIDTH / 2.0f ),
@@ -160,6 +160,8 @@ void game_process_input( Game* game, float dt )
 
 void _do_collisions( Game* game )
 {
+    // Check collisions between bricks and ball
+    // ----------------------------------------
     GameObject* bricks = game->game_levels[game->current_level].bricks;
     size_t brick_count = game->game_levels[game->current_level].bricks_tot;
 
@@ -172,7 +174,6 @@ void _do_collisions( Game* game )
             Collision col = col_check_circ_rect( game->ball, bricks[i] );
             if ( col.is && !game->ball.resolving_collision )
             {
-
                 game->ball.resolving_collision = true;
 
                 // Destroy block if not solid
@@ -192,11 +193,11 @@ void _do_collisions( Game* game )
 
                     if ( col.dir == LEFT )
                     {
-                        game->ball.d.position[0] += penetration;
+                        game->ball.d.position[0] -= penetration;
                     }
                     else
                     {
-                        game->ball.d.position[0] -= penetration;
+                        game->ball.d.position[0] += penetration;
                     }
                 }
                 else // vertical col
@@ -219,6 +220,48 @@ void _do_collisions( Game* game )
             {
                 game->ball.resolving_collision = false;
             }
+        }
+    }
+
+    // Check collisions between player paddle and ball
+    // -----------------------------------------------
+    if ( !game->ball.stuck )
+    {
+        Collision col = col_check_circ_rect( game->ball, game->player );
+
+        if (col.is)
+        {
+            // The further the ball hits the paddle from its center, the
+            // stronger its horizontal velocity should be.
+            float paddle_center =
+                game->player.position[0] + game->player.size[0] / 2.0f;
+            float distance =
+                ( game->ball.d.position[0] + game->ball.radius )
+                - paddle_center;
+            float percent = distance / ( game->player.size[0] / 2.0f );
+
+            float strength = 2.0f;
+
+            vec2 old_vel;
+            glm_vec2_copy(game->ball.d.velocity, old_vel);
+            float old_length = glm_vec2_distance ( GLM_VEC2_ZERO, old_vel );
+
+            game->ball.d.velocity[0] = BALL_INIT_VEL[0] * percent * strength;
+
+            // Because the paddle is always hit from the top, we can just
+            // set the velocity to be directed upward.
+            // To avoid the sticky paddle issue (when collision is detected too
+            // late, and the ball's center is already inside the paddle)
+            game->ball.d.velocity[1] = -1.0f * fabs( game->ball.d.velocity[1] );
+
+            // The length of the old vector should be preserved,
+            // so the overall speed is the same
+            glm_vec2_normalize( game->ball.d.velocity );
+            glm_vec2_scale(
+                game->ball.d.velocity,
+                old_length,
+                game->ball.d.velocity
+            );
         }
     }
 }
