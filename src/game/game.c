@@ -93,31 +93,7 @@ void game_init( Game* game, unsigned int width, unsigned int height )
 
     game->current_level = STARTING_LEVEL;
 
-    vec2 player_pos = {
-        ( width / 2.0f ) - ( PLAYER_WIDTH / 2.0f ),
-        height - PLAYER_HEIGHT
-    };
-
-    game->player = game_object_create(
-        player_pos,
-        ( vec2 ) { PLAYER_WIDTH, PLAYER_HEIGHT },
-        ( vec2 ) { 0.0f, 0.0f },
-        ( vec3 ) { 1.0f, 1.0f, 1.0f },
-        TEX_PADDLE
-    );
-
-    vec2 ball_pos;
-    glm_vec2_add(
-        player_pos,
-        ( vec2 ) { ( PLAYER_WIDTH / 2.0f ) - BALL_RADIUS, -BALL_RADIUS * 2.0f },
-        ball_pos
-    );
-
-    game->ball = ball_object_create(
-        ball_pos,
-        BALL_INIT_VEL,
-        BALL_RADIUS
-    );
+    game_reset_player_and_ball( game );
 }
 
 void game_process_input( Game* game, float dt )
@@ -275,6 +251,13 @@ void game_update( Game* game, float dt )
     // Check for collisions
     // --------------------
     _do_collisions( game );
+
+    // Check if the ball reached the bottom edge
+    if ( game->ball.d.position[1] > game->height )
+    {
+        game_reset_levels( game );
+        game_reset_player_and_ball( game );
+    }
 }
 
 void game_render( Game* game )
@@ -320,4 +303,75 @@ void game_clean( Game* game )
     {
         game_level_clean( &game->game_levels[i] );
     }
+}
+
+void game_reset_levels( Game* game )
+{
+    // TODO: not a good way to do this
+    if ( game->current_level == 0 )
+    {
+        game_level_load(
+            &game->game_levels[0],
+            "res/levels/one.lvl",
+            game->width,
+            game->height / 2
+        );
+    }
+    else if ( game->current_level == 1 )
+    {
+        game_level_load(
+            &game->game_levels[1],
+            "res/levels/two.lvl",
+            game->width,
+            game->height / 2
+        );
+    }
+    else if ( game->current_level == 2 )
+    {
+        game_level_load(
+            &game->game_levels[2],
+            "res/levels/three.lvl",
+            game->width,
+            game->height / 2
+        );
+    }
+    else if ( game->current_level == 3 )
+    {
+        game_level_load(
+            &game->game_levels[3],
+            "res/levels/four.lvl",
+            game->width,
+            game->height / 2
+        );
+    }
+
+}
+
+void game_reset_player_and_ball( Game* game )
+{
+    vec2 player_pos = {
+        ( game->width / 2.0f ) - ( PLAYER_WIDTH / 2.0f ),
+        game->height - PLAYER_HEIGHT
+    };
+
+    game->player = game_object_create(
+        player_pos,
+        ( vec2 ) { PLAYER_WIDTH, PLAYER_HEIGHT },
+        ( vec2 ) { 0.0f, 0.0f },
+        ( vec3 ) { 1.0f, 1.0f, 1.0f },
+        TEX_PADDLE
+    );
+
+    vec2 ball_pos;
+    glm_vec2_add(
+        player_pos,
+        ( vec2 ) { ( PLAYER_WIDTH / 2.0f ) - BALL_RADIUS, -BALL_RADIUS * 2.0f },
+        ball_pos
+    );
+
+    game->ball = ball_object_create(
+        ball_pos,
+        BALL_INIT_VEL,
+        BALL_RADIUS
+    );
 }

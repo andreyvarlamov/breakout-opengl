@@ -44,4 +44,10 @@ void game_render( Game* game );
 // Free memory
 void game_clean( Game* game );
 
+// Reset game level
+void game_reset_levels( Game* game );
+
+// Reset player and ball stats
+void game_reset_player_and_ball( Game* game );
+
 #endif
