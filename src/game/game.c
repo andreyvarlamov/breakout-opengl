@@ -141,6 +141,8 @@ void _do_collisions( Game* game )
     GameObject* bricks = game->game_levels[game->current_level].bricks;
     size_t brick_count = game->game_levels[game->current_level].bricks_tot;
 
+    bool vel_changed = false;
+
     for ( size_t i = 0; i < brick_count; i++ )
     {
         if ( !bricks[i].destroyed )
@@ -148,10 +150,8 @@ void _do_collisions( Game* game )
             // Collision detection
             // -------------------
             Collision col = col_check_circ_rect( game->ball, bricks[i] );
-            if ( col.is && !game->ball.resolving_collision )
+            if ( col.is )
             {
-                game->ball.resolving_collision = true;
-
                 // Destroy block if not solid
                 // --------------------------
                 if ( !bricks[i].is_solid )
@@ -163,7 +163,15 @@ void _do_collisions( Game* game )
                 // --------------------
                 if ( col.dir == LEFT || col.dir == RIGHT ) // horizontal col
                 {
-                    game->ball.d.velocity[0] = -game->ball.d.velocity[0];
+                    if (!vel_changed)
+                    {
+                        // Only want to invert velocity once per frame
+                        // But the rest of the collision resolution can
+                        // happen multiple times per frame, as we don't want
+                        // objects to overlap
+                        game->ball.d.velocity[0] = -game->ball.d.velocity[0];
+                        vel_changed = true;
+                    }
 
                     float penetration = game->ball.radius - fabs( col.diff[0] );
 
@@ -178,7 +186,11 @@ void _do_collisions( Game* game )
                 }
                 else // vertical col
                 {
-                    game->ball.d.velocity[1] = -game->ball.d.velocity[1];
+                    if (!vel_changed)
+                    {
+                        game->ball.d.velocity[1] = -game->ball.d.velocity[1];
+                        vel_changed = true;
+                    }
 
                     float penetration = game->ball.radius - fabs( col.diff[1] );
 
@@ -191,10 +203,6 @@ void _do_collisions( Game* game )
                         game->ball.d.position[1] += penetration;
                     }
                 }
-            }
-            else if ( !col.is && game->ball.resolving_collision )
-            {
-                game->ball.resolving_collision = false;
             }
         }
     }
