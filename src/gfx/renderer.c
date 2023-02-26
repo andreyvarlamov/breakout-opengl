@@ -120,6 +120,9 @@ void renderer_quad_draw(
     glBindVertexArray( _quad_vao );
     glDrawArrays( GL_TRIANGLES, 0, 6 );
     glBindVertexArray( 0 );
+
+    // Unload the shader
+    shader_use ( 0 );
 }
 
 /***************************************************/
@@ -221,4 +224,7 @@ void renderer_particle_draw(
 
     // Reset to default blending mode
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    // Unload the shader
+    shader_use ( 0 );
 }
