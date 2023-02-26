@@ -7,13 +7,6 @@
 
 #define PARTICLE_NUM 500
 
-typedef struct Particle {
-    vec2 pos;
-    vec2 vel;
-    vec4 color;
-    float life;
-} Particle;
-
 // Initialize particle manager
 void pm_init();
 

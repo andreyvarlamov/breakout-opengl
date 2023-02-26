@@ -9,6 +9,7 @@ typedef enum
     TEX_BLOCK_SOLID,
     TEX_BACKGROUND,
     TEX_PADDLE,
+    TEX_PARTICLE,
     TEX_COUNT
 } TexType;
 

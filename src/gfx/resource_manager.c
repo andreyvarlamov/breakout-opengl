@@ -95,6 +95,7 @@ void rm_tex_load_all()
     _tex_load( "res/textures/block_solid.png", false, TEX_BLOCK_SOLID );
     _tex_load( "res/textures/background.png", false, TEX_BACKGROUND );
     _tex_load( "res/textures/paddle.png", true, TEX_PADDLE );
+    _tex_load( "res/textures/particle.png", true, TEX_PARTICLE );
 }
 
 GLuint rm_shader_get( ShaderType shader_type )

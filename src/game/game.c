@@ -14,6 +14,7 @@
 #include "../gfx/shader.h"
 #include "../gfx/tex_type.h"
 #include "collisions.h"
+#include "particle_manager.h"
 
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
@@ -36,9 +37,12 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     rm_tex_load_all();
 
     // Prepare render VAOs and shaders
+    // -------------------------------
     renderer_quad_init( width, height );
     renderer_particle_init();
 
+    // Init level data
+    // ---------------
     game_level_load(
         &game->game_levels[0],
         "res/levels/one.lvl",
@@ -70,6 +74,10 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     game->current_level = STARTING_LEVEL;
 
     game_reset_player_and_ball( game );
+
+    // Init particle manager
+    // ---------------------
+    pm_init();
 }
 
 void game_process_input( Game* game, float dt )
@@ -236,12 +244,22 @@ void game_update( Game* game, float dt )
     // --------------------
     _do_collisions( game );
 
-    // Check if the ball reached the bottom edge
+    // Check if game over
+    // ------------------
     if ( game->ball.d.position[1] > game->height )
     {
         game_reset_levels( game );
         game_reset_player_and_ball( game );
     }
+    
+    // Update particles
+    // ----------------
+    pm_update(
+        dt,
+        &game->ball.d,
+        2, // 2 new particles per frame
+        ( vec2 ) { game->ball.radius / 2.0f, game->ball.radius / 2.0f }
+    );
 }
 
 void game_render( Game* game )
@@ -270,6 +288,10 @@ void game_render( Game* game )
         game->player.color
     );
 
+    // Render particle effects
+    // -----------------------
+    pm_draw();
+
     // Render the ball
     // ---------------
     renderer_quad_draw(
@@ -287,6 +309,8 @@ void game_clean( Game* game )
     {
         game_level_clean( &game->game_levels[i] );
     }
+
+    pm_clean();
 }
 
 void game_reset_levels( Game* game )
