@@ -24,44 +24,20 @@
 
 void game_init( Game* game, unsigned int width, unsigned int height )
 {
-    for ( int i = 0; i < 1024; ++i )
-    {
-        game->keys[i] = false;
-    }
-
+    // Set initial game params
+    // -----------------------
     game->width = width;
     game->height = height;
     game->state = GAME_ACTIVE;
 
-    GLuint shader = load_shader(
-        "res/shaders/quad.vs",
-        "res/shaders/quad.fs",
-        NULL,
-        SHADER_QUAD
-    );
+    // Load resources from file into OpenGL
+    // ------------------------------------
+    rm_shader_load_all();
+    rm_tex_load_all();
 
-    mat4 projection;
-    glm_ortho(
-        0.0f,
-        ( float ) game->width,
-        ( float ) game->height,
-        0.0f,
-        -1.0f,
-        1.0f,
-        projection
-    );
-
-    shader_use( shader );
-    shader_uniform_int( shader, "image", 0 );
-    shader_uniform_mat4( shader, "projection", projection );
-
-    quad_init_render_data();
-
-    load_texture( "res/textures/awesomeface.png", true, TEX_FACE );
-    load_texture( "res/textures/block.png", false, TEX_BLOCK );
-    load_texture( "res/textures/block_solid.png", false, TEX_BLOCK_SOLID );
-    load_texture( "res/textures/background.png", false, TEX_BACKGROUND );
-    load_texture( "res/textures/paddle.png", true, TEX_PADDLE );
+    // Prepare render VAOs and shaders
+    renderer_quad_init( width, height );
+    renderer_particle_init();
 
     game_level_load(
         &game->game_levels[0],
@@ -134,7 +110,7 @@ void game_process_input( Game* game, float dt )
     }
 }
 
-void _do_collisions( Game* game )
+static void _do_collisions( Game* game )
 {
     // Check collisions between bricks and ball
     // ----------------------------------------
@@ -272,7 +248,7 @@ void game_render( Game* game )
 {
     // Render background
     // -----------------
-    sprite_draw(
+    renderer_quad_draw(
         TEX_BACKGROUND,
         (vec2) { 0.0f, 0.0f },
         (vec2) { game->width, game->height },
@@ -286,7 +262,7 @@ void game_render( Game* game )
 
     // Render player paddle
     // --------------------
-    sprite_draw(
+    renderer_quad_draw(
         game->player.tex_type,
         game->player.position,
         game->player.size,
@@ -296,7 +272,7 @@ void game_render( Game* game )
 
     // Render the ball
     // ---------------
-    sprite_draw(
+    renderer_quad_draw(
         game->ball.d.tex_type,
         game->ball.d.position,
         game->ball.d.size,

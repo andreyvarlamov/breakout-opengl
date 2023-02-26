@@ -8,7 +8,7 @@
 #include "../gfx/renderer.h"
 #include "../util/file_io.h"
 
-void _init_bricks( GameLevel* game_level )
+static void _init_bricks( GameLevel* game_level )
 {
     game_level->bricks = ( GameObject* )
         calloc( 1, BRICKS_INIT_CAP * sizeof( GameObject ) );
@@ -16,7 +16,7 @@ void _init_bricks( GameLevel* game_level )
     game_level->bricks_cap = BRICKS_INIT_CAP;
 }
 
-void _add_brick( GameLevel* game_level, GameObject game_object )
+static void _add_brick( GameLevel* game_level, GameObject game_object )
 {
     // Double the capacity of allocated memory if ran out of previously
     // allocated memory
@@ -39,14 +39,14 @@ void _add_brick( GameLevel* game_level, GameObject game_object )
     ++( game_level->bricks_tot );
 }
 
-void _clean_bricks( GameLevel* game_level )
+static void _clean_bricks( GameLevel* game_level )
 {
     free( game_level->bricks );
     game_level->bricks_tot = 0;
     game_level->bricks_cap = 0;
 }
 
-unsigned int* _read_from_file(
+static unsigned int* _read_from_file(
     const char* file,
     size_t* tile_num_out,
     size_t* row_size_out
@@ -92,7 +92,7 @@ unsigned int* _read_from_file(
     return tile_types;
 }
 
-void _init_level(
+static void _init_level(
     GameLevel* game_level,
     unsigned int* tile_types,
     size_t tile_num,
@@ -189,7 +189,7 @@ void game_level_draw( GameLevel* game_level )
         if ( !game_level->bricks[i].destroyed )
         {
             GameObject brick = game_level->bricks[i];
-            sprite_draw(
+            renderer_quad_draw(
                 brick.tex_type,
                 brick.position,
                 brick.size,

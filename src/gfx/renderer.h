@@ -9,9 +9,10 @@
 /*                  QUAD RENDERING                 */
 /***************************************************/
 
-void quad_init_render_data();
+// Prepare quad VAO and shader data
+void renderer_quad_init( unsigned int game_width, unsigned int game_height );
 
-void sprite_draw(
+void renderer_quad_draw(
     TexType tex_type,
     vec2 position,
     vec2 size,
@@ -23,9 +24,10 @@ void sprite_draw(
 /*                PARTICLE RENDERING               */
 /***************************************************/
 
-void particle_init_render_data();
+// Prepare particle VAO and shader data
+void renderer_particle_init();
 
-void particle_draw(
+void renderer_particle_draw(
     TexType tex_type,
     vec2 positions[],
     vec4 colors[],

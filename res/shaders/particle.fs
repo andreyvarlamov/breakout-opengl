@@ -7,5 +7,5 @@ uniform vec4 particle_color;
 
 void main()
 {
-    color = particle_color * texture ( image, tec_coords );
+    color = particle_color * texture ( image, tex_coords );
 }

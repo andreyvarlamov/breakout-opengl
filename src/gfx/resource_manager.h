@@ -9,27 +9,16 @@
 #include "shader_type.h"
 #include "shader.h"
 
-// Load and generate a shader program from file loading vertex, fragment (and
-// geometry) shader's source code.
-GLuint load_shader(
-        const char* vShaderFile,
-        const char* fShaderFile,
-        const char* gShaderFile,
-        ShaderType shader_type);
+// Read all shaders and load them into OpenGL
+void rm_shader_load_all();
 
-// Retrieve a stored shader
-GLuint get_shader(ShaderType shader_type);
+// Read all textures and load them into OpenGL
+void rm_tex_load_all();
 
-// Load and generate a texture from file
-GLuint load_texture(
-        const char* file,
-        bool alpha,
-        TexType tex_type);
+// Get OpenGL shader ID by type of shader
+GLuint rm_shader_get( ShaderType shader_type );
 
-// Retrieve a stored texture
-GLuint get_texture(TexType tex_type);
-
-// Properly deallocate all loaded resources
-void clear();
+// Get OpenGL texture ID by type of texture
+GLuint rm_tex_get( TexType tex_type );
 
 #endif

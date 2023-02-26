@@ -16,8 +16,10 @@ GLuint _particle_vao;
 /*                  QUAD RENDERING                 */
 /***************************************************/
 
-void quad_init_render_data()
+void renderer_quad_init( unsigned int game_width, unsigned int game_height )
 {
+    // Prepare the VAO
+    // ---------------
     GLuint VBO;
     float vertices[] = {
         // pos      // tex
@@ -62,9 +64,33 @@ void quad_init_render_data()
     // Unbind VBO & _quad_vao
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
+
+    // Provide constant uniforms to quad shader
+    // ----------------------------------------
+    GLuint shader = rm_shader_get( SHADER_QUAD );
+    shader_use( shader );
+
+    // Get the shader to use texture loaded under samplerID 0
+    shader_uniform_int( shader, "image", 0 );
+
+    // Provide the projection matrix to the shader
+    mat4 projection;
+    glm_ortho(
+        0.0f,
+        ( float ) game_width,
+        ( float ) game_height,
+        0.0f,
+        -1.0f,
+        1.0f,
+        projection
+    );
+    shader_uniform_mat4( shader, "projection", projection );
+
+    // Unload the shader
+    shader_use ( 0 );
 }
 
-void sprite_draw(
+void renderer_quad_draw(
     TexType tex_type,
     vec2 position,
     vec2 size,
@@ -72,7 +98,7 @@ void sprite_draw(
     vec3 color
 )
 {
-    GLuint shader_id = get_shader( SHADER_QUAD );
+    GLuint shader_id = rm_shader_get( SHADER_QUAD );
     shader_use( shader_id );
 
     mat4 model;
@@ -89,7 +115,7 @@ void sprite_draw(
     shader_uniform_vec3( shader_id, "sprite_color", color );
 
     glActiveTexture( GL_TEXTURE0 );
-    texture2d_bind( get_texture( tex_type ) );
+    texture2d_bind( rm_tex_get( tex_type ) );
 
     glBindVertexArray( _quad_vao );
     glDrawArrays( GL_TRIANGLES, 0, 6 );
@@ -100,8 +126,10 @@ void sprite_draw(
 /*                PARTICLE RENDERING               */
 /***************************************************/
 
-void particle_init_render_data()
+void renderer_particle_init()
 {
+    // Prepare particle VAO
+    // --------------------
     GLuint VBO;
 
     float particle_vertices[] = {
@@ -138,23 +166,34 @@ void particle_init_render_data()
     // Unbind VBO & _particle_vao
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
+
+    // Provide constant uniforms to particle shader
+    // ----------------------------------------
+    GLuint shader = rm_shader_get( SHADER_PARTICLE );
+    shader_use( shader );
+
+    // Get the shader to use texture loaded under samplerID 0
+    shader_uniform_int( shader, "image", 0 );
+
+    // Unload the shader
+    shader_use ( 0 );
 }
 
-void particle_draw(
+void renderer_particle_draw(
     TexType tex_type,
     vec2 positions[],
     vec4 colors[],
     size_t count
 )
 {
-    GLuint shader_id = get_shader( SHADER_PARTICLE );
+    GLuint shader_id = rm_shader_get( SHADER_PARTICLE );
     shader_use( shader_id );
 
     // Use additive blending to give it a 'glow' effect
     glBlendFunc( GL_SRC_ALPHA, GL_ONE );
 
     glBindVertexArray( _particle_vao );
-    GLuint tex = get_texture( tex_type );
+    GLuint tex = rm_tex_get( tex_type );
     glActiveTexture( GL_TEXTURE0 );
     texture2d_bind( tex );
 

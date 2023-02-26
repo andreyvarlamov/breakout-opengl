@@ -1,8 +1,6 @@
 #ifndef TEX_TYPE_H
 #define TEX_TYPE_H
 
-#define TEX_TYPE_COUNT 128
-
 typedef enum
 {
     TEX_NONE,
@@ -11,7 +9,7 @@ typedef enum
     TEX_BLOCK_SOLID,
     TEX_BACKGROUND,
     TEX_PADDLE,
-    TEX_TEST
+    TEX_COUNT
 } TexType;
 
 #endif
