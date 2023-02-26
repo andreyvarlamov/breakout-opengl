@@ -126,7 +126,7 @@ void renderer_quad_draw(
 /*                PARTICLE RENDERING               */
 /***************************************************/
 
-void renderer_particle_init()
+void renderer_particle_init( unsigned int game_width, unsigned int game_height )
 {
     // Prepare particle VAO
     // --------------------
@@ -174,6 +174,19 @@ void renderer_particle_init()
 
     // Get the shader to use texture loaded under samplerID 0
     shader_uniform_int( shader, "image", 0 );
+
+    // Provide the projection matrix to the shader
+    mat4 projection;
+    glm_ortho(
+        0.0f,
+        ( float ) game_width,
+        ( float ) game_height,
+        0.0f,
+        -1.0f,
+        1.0f,
+        projection
+    );
+    shader_uniform_mat4( shader, "projection", projection );
 
     // Unload the shader
     shader_use ( 0 );

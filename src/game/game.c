@@ -39,7 +39,7 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     // Prepare render VAOs and shaders
     // -------------------------------
     renderer_quad_init( width, height );
-    renderer_particle_init();
+    renderer_particle_init( width, height );
 
     // Init level data
     // ---------------

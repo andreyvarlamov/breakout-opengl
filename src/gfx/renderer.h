@@ -25,7 +25,10 @@ void renderer_quad_draw(
 /***************************************************/
 
 // Prepare particle VAO and shader data
-void renderer_particle_init();
+void renderer_particle_init(
+    unsigned int game_width,
+    unsigned int game_height
+);
 
 void renderer_particle_draw(
     TexType tex_type,

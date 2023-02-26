@@ -55,7 +55,7 @@ static void _respawn_particle( size_t i, GameObject* obj, vec2 offset )
     float rand_color = 0.5f + ( ( rand() % 100 ) / 100.0f );
     vec2 rand_offset;
     glm_vec2_adds( offset, random, rand_offset );
-    glm_vec2_add( _pos[i], rand_offset, _pos[i] );
+    glm_vec2_add( obj->position, rand_offset, _pos[i] );
 
     // Set color
     // ---------
