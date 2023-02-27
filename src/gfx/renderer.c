@@ -12,9 +12,22 @@
 GLuint _quad_vao;
 GLuint _particle_vao;
 
-/***************************************************/
-/*                  QUAD RENDERING                 */
-/***************************************************/
+/******************************************************************************
+ *                                FRAMEBUFFER                                 *
+ ******************************************************************************/
+
+// Initialize the framebuffer
+void renderer_framebuffer_init();
+
+// Bind the framebuffer; consequent draws will be drawn to this framebuffer
+void renderer_framebuffer_bind();
+
+void renderer_framebuffer_unbind();
+
+
+/******************************************************************************
+ *                               QUAD RENDERING                               *
+ ******************************************************************************/
 
 void renderer_quad_init( unsigned int game_width, unsigned int game_height )
 {
@@ -47,21 +60,20 @@ void renderer_quad_init( unsigned int game_width, unsigned int game_height )
 
     // set an attribute for the particle mesh
     glEnableVertexAttribArray( 0 );
-    /*************************************************************************
-       A Vertex Array Object however, stores vertexAttribPointer data and EBO
-       binds, but does not store VBO binds. What it does store is, in what
-       buffer it can find its vertex data after a call to
-       glVertexAttribPointer, that stores the currently bound VBO as the data
-       resource for that specific vertex attribute; that is stored in the VAO.
-       So we're free to unbind the VBO as long as the corresponding calls to
-       glVertexAttribPointer are made that require that VBO. 
-       ***********************************************************************/
+    /* A Vertex Array Object however, stores vertexAttribPointer data and EBO
+     * binds, but does not store VBO binds. What it does store is, in what
+     * buffer it can find its vertex data after a call to
+     * glVertexAttribPointer, that stores the currently bound VBO as the data
+     * resource for that specific vertex attribute; that is stored in the VAO.
+     * So we're free to unbind the VBO as long as the corresponding calls to
+     * glVertexAttribPointer are made that require that VBO. */
     glVertexAttribPointer( // how to interpret data from vbo
         0, 4, GL_FLOAT, GL_FALSE,
         4 * sizeof( float ), ( void* ) 0
     );
 
     // Unbind VBO & _quad_vao
+    // ----------------------
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
 
@@ -125,9 +137,9 @@ void renderer_quad_draw(
     shader_use ( 0 );
 }
 
-/***************************************************/
-/*                PARTICLE RENDERING               */
-/***************************************************/
+/******************************************************************************
+ *                             PARTICLE RENDERING                             *
+ ******************************************************************************/
 
 void renderer_particle_init( unsigned int game_width, unsigned int game_height )
 {
@@ -167,6 +179,7 @@ void renderer_particle_init( unsigned int game_width, unsigned int game_height )
     );
 
     // Unbind VBO & _particle_vao
+    // --------------------------
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
 

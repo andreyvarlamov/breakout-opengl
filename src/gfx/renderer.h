@@ -5,9 +5,21 @@
 
 #include "tex_type.h"
 
-/***************************************************/
-/*                  QUAD RENDERING                 */
-/***************************************************/
+/******************************************************************************
+ *                                FRAMEBUFFER                                 *
+ ******************************************************************************/
+
+// Initialize the framebuffer
+void renderer_framebuffer_init();
+
+// Bind the framebuffer; consequent draws will be drawn to this framebuffer
+void renderer_framebuffer_bind();
+
+void renderer_framebuffer_unbind();
+
+/******************************************************************************
+ *                               QUAD RENDERING                               *
+ ******************************************************************************/
 
 // Prepare quad VAO and shader data
 void renderer_quad_init( unsigned int game_width, unsigned int game_height );
@@ -20,9 +32,9 @@ void renderer_quad_draw(
     vec3 color
 );
 
-/***************************************************/
-/*                PARTICLE RENDERING               */
-/***************************************************/
+/******************************************************************************
+ *                             PARTICLE RENDERING                             *
+ ******************************************************************************/
 
 // Prepare particle VAO and shader data
 void renderer_particle_init(
@@ -30,13 +42,11 @@ void renderer_particle_init(
     unsigned int game_height
 );
 
-/*****************************************************************************
- * The idea behind splitting into 3 actions is that there will always be
+/* The idea behind splitting into 3 actions is that there will always be
  * many particles being drawn, so no need to set and unset OpenGL state before
  * and after drawing each particle.
  * But still want to separate the particulars of Particle logic calculation
- * (e.g. life and position), and the particulars of rendering in OpenGL.
- *****************************************************************************/
+ * (e.g. life and position), and the particulars of rendering in OpenGL. */
 
 // Bind particle shader, texture, vao
 void renderer_particle_draw_prepare( TexType tex_type );
@@ -46,5 +56,13 @@ void renderer_particle_draw_do( vec2 position, vec4 color );
 
 // Unbind particle shader, texture, vao
 void renderer_particle_draw_end();
+
+/******************************************************************************
+ *                               POST PROCESSING                              *
+ ******************************************************************************/
+
+void renderer_postprocess_init();
+
+void renderer_postprocess_draw();
 
 #endif
