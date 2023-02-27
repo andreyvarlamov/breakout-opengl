@@ -10,17 +10,21 @@
  ******************************************************************************/
 
 // Initialize the framebuffer
-void renderer_framebuffer_init();
+void renderer_framebuffer_init(
+    unsigned int game_width,
+    unsigned int game_height
+);
 
 // Bind the framebuffer; consequent draws will be drawn to this framebuffer
 void renderer_framebuffer_bind();
 
+// Resolve the multi-sampled buffer into intermediate FBO and store to texture
 void renderer_framebuffer_unbind();
 
 // Initialize vao, shader, etc. to draw the final framebuffer
 void renderer_framebuffer_draw_init();
 
-// Draw the final framebuffer texture after applying post-processing
+// Draw the final framebuffer texture after applying post-processing (or not)
 void renderer_framebuffer_draw();
 
 /******************************************************************************

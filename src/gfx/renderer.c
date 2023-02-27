@@ -12,18 +12,112 @@
 GLuint _quad_vao;
 GLuint _particle_vao;
 
+GLuint _msfbo;
+GLuint _fbo;
+GLuint _rbo;
+
+GLuint _framebuffer_tex;
+
+unsigned int _game_width;
+unsigned int _game_height;
+
 /******************************************************************************
  *                                FRAMEBUFFER                                 *
  ******************************************************************************/
 
-// Initialize the framebuffer
-void renderer_framebuffer_init();
+void renderer_framebuffer_init(
+    unsigned int game_width,
+    unsigned int game_height
+)
+{
+    _game_width = game_width;
+    _game_height = game_height;
+    // Initialize renderbuffer / framebuffer objects
+    // ---------------------------------------------
+    glGenFramebuffers ( 1, &_msfbo );
+    glGenFramebuffers ( 1, &_fbo   );
+    glGenRenderbuffers( 1, &_rbo   );
 
-// Bind the framebuffer; consequent draws will be drawn to this framebuffer
-void renderer_framebuffer_bind();
+    // Initialize render buffer storage with a multisampled
+    // color buffer (don't need a depth/stencil buffer)
+    // ----------------------------------------------------
+    glBindFramebuffer ( GL_FRAMEBUFFER,  _msfbo );
+    glBindRenderbuffer( GL_RENDERBUFFER, _rbo   );
 
-void renderer_framebuffer_unbind();
+    glRenderbufferStorageMultisample( // allocate storage for render buffer obj
+        GL_RENDERBUFFER,
+        4,
+        GL_RGB,
+        game_width,
+        game_height
+    );
 
+    glFramebufferRenderbuffer( // attach MS render buffer object to framebuffer
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0,
+        GL_RENDERBUFFER,
+        _rbo
+    );
+
+    if( glCheckFramebufferStatus( GL_FRAMEBUFFER ) != GL_FRAMEBUFFER_COMPLETE )
+    {
+        printf("ERROR::POSTPROCESSOR: Failed to initialize MSFBO\n");
+    }
+
+    // Also initialize the FBO/texture to blit multisampled color-buffer to;
+    // used for shader operations (for post-processing)
+    // ---------------------------------------------------------------------
+    glBindFramebuffer( GL_FRAMEBUFFER, _fbo);
+    _framebuffer_tex = texture2d_generate(
+        game_width,
+        game_height,
+        false,
+        NULL
+    );
+
+    glFramebufferTexture2D(    // attach texture to framebuffer as its color
+        GL_FRAMEBUFFER,        // attachment
+        GL_COLOR_ATTACHMENT0,
+        GL_TEXTURE_2D,
+        _framebuffer_tex,
+        0
+    );
+
+    if( glCheckFramebufferStatus( GL_FRAMEBUFFER ) != GL_FRAMEBUFFER_COMPLETE )
+    {
+        printf("ERROR::POSTPROCESSOR: Failed to initialize FBO\n");
+    }
+
+    glBindFramebuffer ( GL_FRAMEBUFFER,  0 );
+    glBindRenderbuffer( GL_RENDERBUFFER, 0 );
+}
+
+void renderer_framebuffer_bind()
+{
+    glBindFramebuffer( GL_FRAMEBUFFER, _msfbo );
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    glClear( GL_COLOR_BUFFER_BIT );
+}
+
+void renderer_framebuffer_unbind()
+{
+    // Now resolve multisampled color-buffer into ntermediate FBO
+    // to store the texture
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, _msfbo );
+    glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _fbo );
+    glBlitFramebuffer(
+        0, 0, _game_width, _game_height,
+        0, 0, _game_width, _game_height,
+        GL_COLOR_BUFFER_BIT, GL_NEAREST
+    );
+    // Bind both READ and WRITE framebuffer to default framebuffer
+    // Draws after this will be on-screen
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+}
+
+void renderer_framebuffer_draw_init();
+
+void renderer_framebuffer_draw();
 
 /******************************************************************************
  *                               QUAD RENDERING                               *
