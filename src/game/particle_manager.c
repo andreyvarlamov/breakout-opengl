@@ -7,6 +7,7 @@
 
 #include "../gfx/renderer.h"
 #include "../gfx/tex_type.h"
+#include "game_object.h"
 
 Particle* _particles;
 
