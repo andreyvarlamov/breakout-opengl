@@ -6,7 +6,7 @@
 #include "tex_type.h"
 
 /******************************************************************************
- *                                FRAMEBUFFER                                 *
+ *                     FRAMEBUFFER AND POST PROCESSING                        *
  ******************************************************************************/
 
 // Initialize the framebuffer
@@ -16,6 +16,12 @@ void renderer_framebuffer_init();
 void renderer_framebuffer_bind();
 
 void renderer_framebuffer_unbind();
+
+// Initialize vao, shader, etc. to draw the final framebuffer
+void renderer_framebuffer_draw_init();
+
+// Draw the final framebuffer texture after applying post-processing
+void renderer_framebuffer_draw();
 
 /******************************************************************************
  *                               QUAD RENDERING                               *
@@ -56,13 +62,5 @@ void renderer_particle_draw_do( vec2 position, vec4 color );
 
 // Unbind particle shader, texture, vao
 void renderer_particle_draw_end();
-
-/******************************************************************************
- *                               POST PROCESSING                              *
- ******************************************************************************/
-
-void renderer_postprocess_init();
-
-void renderer_postprocess_draw();
 
 #endif
