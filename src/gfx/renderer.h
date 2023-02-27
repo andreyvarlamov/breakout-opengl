@@ -6,7 +6,7 @@
 #include "tex_type.h"
 
 /******************************************************************************
- *                     FRAMEBUFFER AND POST PROCESSING                        *
+ *                              FRAMEBUFFER                                   *
  ******************************************************************************/
 
 // Initialize the framebuffer
@@ -21,11 +21,15 @@ void renderer_framebuffer_bind();
 // Resolve the multi-sampled buffer into intermediate FBO and store to texture
 void renderer_framebuffer_unbind();
 
-// Initialize vao, shader, etc. to draw the final framebuffer
-void renderer_framebuffer_draw_init();
+/******************************************************************************
+ *                          SCENE AND POST-PROCESSING                         *
+ ******************************************************************************/
 
-// Draw the final framebuffer texture after applying post-processing (or not)
-void renderer_framebuffer_draw();
+// Initialize vao, shader, etc. to draw the scene
+void renderer_scene_init();
+
+// Draw the scene and applying post-processing (or not)
+void renderer_scene_draw();
 
 /******************************************************************************
  *                               QUAD RENDERING                               *

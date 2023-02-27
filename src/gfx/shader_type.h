@@ -5,7 +5,7 @@ typedef enum
 {
     SHADER_QUAD,
     SHADER_PARTICLE,
-    SHADER_POST_PROC,
+    SHADER_SCENE,
     SHADER_COUNT
 } ShaderType;
 

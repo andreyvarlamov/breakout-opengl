@@ -11,13 +11,13 @@
 
 GLuint _quad_vao;
 GLuint _particle_vao;
-GLuint _framebuffer_vao;
+GLuint _scene_vao;
 
 GLuint _msfbo;
 GLuint _fbo;
 GLuint _rbo;
 
-GLuint _framebuffer_tex;
+GLuint _scene_tex;
 
 unsigned int _game_width;
 unsigned int _game_height;
@@ -69,7 +69,7 @@ void renderer_framebuffer_init(
     // used for shader operations (for post-processing)
     // ---------------------------------------------------------------------
     glBindFramebuffer( GL_FRAMEBUFFER, _fbo);
-    _framebuffer_tex = texture2d_generate(
+    _scene_tex = texture2d_generate(
         game_width,
         game_height,
         false,
@@ -80,7 +80,7 @@ void renderer_framebuffer_init(
         GL_FRAMEBUFFER,        // attachment
         GL_COLOR_ATTACHMENT0,
         GL_TEXTURE_2D,
-        _framebuffer_tex,
+        _scene_tex,
         0
     );
 
@@ -116,7 +116,11 @@ void renderer_framebuffer_unbind()
     glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 }
 
-void renderer_framebuffer_draw_init()
+/******************************************************************************
+ *                          SCENE AND POST-PROCESSING                         *
+ ******************************************************************************/
+
+void renderer_scene_init()
 {
     GLuint VBO;
     float vertices[] = {
@@ -129,7 +133,7 @@ void renderer_framebuffer_draw_init()
          1.0f, -1.0f, 1.0f, 0.0f,
          1.0f,  1.0f, 1.0f, 1.0f,
     };
-    glGenVertexArrays( 1, &_framebuffer_vao );
+    glGenVertexArrays( 1, &_scene_vao );
     glGenBuffers( 1, &VBO );
 
     glBindBuffer( GL_ARRAY_BUFFER, VBO );
@@ -139,7 +143,7 @@ void renderer_framebuffer_draw_init()
         GL_STATIC_DRAW
     );
 
-    glBindVertexArray( _framebuffer_vao );
+    glBindVertexArray( _scene_vao );
     glEnableVertexAttribArray( 0 );
     glVertexAttribPointer(
         0, 4, GL_FLOAT, GL_FALSE,
@@ -151,13 +155,13 @@ void renderer_framebuffer_draw_init()
 
 void renderer_framebuffer_draw()
 {
-    GLuint shader = rm_shader_get( SHADER_POST_PROC );
+    GLuint shader = rm_shader_get( SHADER_SCENE );
     shader_use( shader );
 
     glActiveTexture( GL_TEXTURE0 );
-    texture2d_bind( _framebuffer_tex );
+    texture2d_bind( _scene_tex );
 
-    glBindVertexArray( _framebuffer_vao );
+    glBindVertexArray( _scene_vao );
     glDrawArrays( GL_TRIANGLES, 0, 6 );
     glBindVertexArray( 0 );
 

@@ -86,6 +86,13 @@ void rm_shader_load_all()
         NULL,
         SHADER_PARTICLE
     );
+
+    _shader_load(
+        "res/shaders/scene.vs",
+        "res/shaders/scene.fs",
+        NULL,
+        SHADER_SCENE
+    );
 }
 
 void rm_tex_load_all()
