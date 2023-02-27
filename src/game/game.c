@@ -18,9 +18,11 @@
 
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
-#define PLAYER_VELOCITY 500.0f
+#define PLAYER_VELOCITY 800.0f
+//#define PLAYER_VELOCITY 500.0f
 #define BALL_RADIUS 12.5f
-#define BALL_INIT_VEL (vec2) { 100.0f, -350.0f }
+#define BALL_INIT_VEL (vec2) { 125.0f, -450.0f }
+//#define BALL_INIT_VEL (vec2) { 100.0f, -350.0f }
 //#define BALL_INIT_VEL (vec2) { 0.0f, -100.0f }
 
 void game_init( Game* game, unsigned int width, unsigned int height )
