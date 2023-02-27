@@ -11,6 +11,7 @@
 
 GLuint _quad_vao;
 GLuint _particle_vao;
+GLuint _framebuffer_vao;
 
 GLuint _msfbo;
 GLuint _fbo;
@@ -115,9 +116,54 @@ void renderer_framebuffer_unbind()
     glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 }
 
-void renderer_framebuffer_draw_init();
+void renderer_framebuffer_draw_init()
+{
+    GLuint VBO;
+    float vertices[] = {
+        // pos
+        -1.0f, -1.0f, 0.0f, 0.0f,
+         1.0f,  1.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, 0.0f, 1.0f,
 
-void renderer_framebuffer_draw();
+        -1.0f, -1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, 1.0f, 1.0f,
+    };
+    glGenVertexArrays( 1, &_framebuffer_vao );
+    glGenBuffers( 1, &VBO );
+
+    glBindBuffer( GL_ARRAY_BUFFER, VBO );
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        sizeof( vertices ), vertices,
+        GL_STATIC_DRAW
+    );
+
+    glBindVertexArray( _framebuffer_vao );
+    glEnableVertexAttribArray( 0 );
+    glVertexAttribPointer(
+        0, 4, GL_FLOAT, GL_FALSE,
+        4 * sizeof( float ), ( void* ) 0
+    );
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    glBindVertexArray( 0 );
+}
+
+void renderer_framebuffer_draw()
+{
+    GLuint shader = rm_shader_get( SHADER_POST_PROC );
+    shader_use( shader );
+
+    glActiveTexture( GL_TEXTURE0 );
+    texture2d_bind( _framebuffer_tex );
+
+    glBindVertexArray( _framebuffer_vao );
+    glDrawArrays( GL_TRIANGLES, 0, 6 );
+    glBindVertexArray( 0 );
+
+    // Unload the shader
+    shader_use ( 0 );
+}
 
 /******************************************************************************
  *                               QUAD RENDERING                               *
