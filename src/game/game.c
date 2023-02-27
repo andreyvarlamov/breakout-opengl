@@ -43,6 +43,12 @@ void game_init( Game* game, unsigned int width, unsigned int height )
     renderer_quad_init( width, height );
     renderer_particle_init( width, height );
 
+    // Prepare off-screen multisampled framebuffer
+    // And scene VAOs and shaders
+    // -------------------------------------------
+    renderer_framebuffer_init( width, height );
+    renderer_scene_init();
+
     // Init level data
     // ---------------
     game_level_load(
@@ -266,6 +272,11 @@ void game_update( Game* game, float dt )
 
 void game_render( Game* game )
 {
+    // Everything after will be rendered onto
+    // the scene framebuffer
+    // --------------------------------------
+    renderer_framebuffer_bind();
+
     // Render background
     // -----------------
     renderer_quad_draw(
@@ -303,6 +314,15 @@ void game_render( Game* game )
         game->ball.d.rotation,
         game->ball.d.color
     );
+
+    // Everything after will be rendered
+    // onto the default on-screen framebuffer
+    // --------------------------------------
+    renderer_framebuffer_unbind();
+
+    // Render the actual scene onto the screen
+    // ---------------------------------------
+    renderer_scene_draw();
 }
 
 void game_clean( Game* game )

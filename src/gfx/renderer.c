@@ -153,7 +153,7 @@ void renderer_scene_init()
     glBindVertexArray( 0 );
 }
 
-void renderer_framebuffer_draw()
+void renderer_scene_draw()
 {
     GLuint shader = rm_shader_get( SHADER_SCENE );
     shader_use( shader );
