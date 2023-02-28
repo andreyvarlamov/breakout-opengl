@@ -1,10 +1,15 @@
 #include "powup_manager.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <cglm/cglm.h>
 
 #include "../gfx/renderer.h"
+
+/******************************************************************************
+ *                                  GENERAL                                   *
+ ******************************************************************************/
 
 void powup_init( PowupManager* pu_man )
 {
@@ -12,7 +17,45 @@ void powup_init( PowupManager* pu_man )
     {
         pu_man->obj[i].destroyed = true;
     }
+
+    for ( size_t i = 0; i < POWUP_COUNT; i++ )
+    {
+        pu_man->pu_effects[i] = 0.0f;
+    }
 }
+
+void powup_update( PowupManager* pu_man, float dt )
+{
+    for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
+    {
+        if ( !pu_man->obj[i].destroyed )
+        {
+            vec2 scaled_vel;
+            glm_vec2_scale( pu_man->obj[i].velocity, dt, scaled_vel );
+            glm_vec2_add(
+                pu_man->obj[i].position,
+                scaled_vel,
+                pu_man->obj[i].position
+            );
+        }
+    }
+
+    for ( size_t i = 0; i < POWUP_COUNT; i++ )
+    {
+        if ( pu_man->pu_effects[i] > 0.0f )
+        {
+            pu_man->pu_effects[i] -= dt;
+            if ( pu_man->pu_effects[i] <= 0.0f )
+            {
+                pu_man->pu_effects[i] = 0.0f;
+            }
+        }
+    }
+}
+
+/******************************************************************************
+ *                            POWER UP OBJECTS                                *
+ ******************************************************************************/
 
 void powup_object_respawn( PowupManager* pu_man, PowupType pu_type, vec2 pos )
 {
@@ -146,23 +189,6 @@ void powup_object_respawn_random( PowupManager* pu_man, vec2 pos )
     }
 }
 
-void powup_update( PowupManager* pu_man, float dt )
-{
-    for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
-    {
-        if ( !pu_man->obj[i].destroyed )
-        {
-            vec2 scaled_vel;
-            glm_vec2_scale( pu_man->obj[i].velocity, dt, scaled_vel );
-            glm_vec2_add(
-                pu_man->obj[i].position,
-                scaled_vel,
-                pu_man->obj[i].position
-            );
-        }
-    }
-}
-
 void powup_object_draw( PowupManager* pu_man )
 {
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
@@ -178,4 +204,45 @@ void powup_object_draw( PowupManager* pu_man )
             );
         }
     }
+}
+
+/******************************************************************************
+ *                            POWER UP EFFECTS                                *
+ ******************************************************************************/
+
+void powup_effect_set( PowupManager* pu_man, PowupType pu_type )
+{
+    float dur = 0.0f;
+
+    if ( pu_type == POWUP_SPEED )
+    {
+        dur = POWUP_EFF_DUR_SPEED;
+    }
+    else if ( pu_type == POWUP_STICKY )
+    {
+        dur = POWUP_EFF_DUR_STICKY;
+    }
+    else if ( pu_type == POWUP_PASS_THROUGH )
+    {
+        dur = POWUP_EFF_DUR_PASS_THROUGH;
+    }
+    else if ( pu_type == POWUP_PAD_SIZE_INCREASE )
+    {
+        dur = POWUP_EFF_DUR_PAD_SIZE_INCREASE;
+    }
+    else if ( pu_type == POWUP_CONFUSE )
+    {
+        dur = POWUP_EFF_DUR_CONFUSE;
+    }
+    else if ( pu_type == POWUP_CONFUSE )
+    {
+        dur = POWUP_EFF_DUR_CHAOS;
+    }
+
+    pu_man->pu_effects[pu_type] = dur;
+}
+
+bool powup_effect_get( PowupManager* pu_man, PowupType pu_type )
+{
+    return pu_man->pu_effects[pu_type] > 0.0f;
 }

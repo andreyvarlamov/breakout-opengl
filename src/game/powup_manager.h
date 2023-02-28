@@ -5,6 +5,10 @@
 
 #include "game_object.h"
 
+/******************************************************************************
+ *                                  DEFINES                                   *
+ ******************************************************************************/
+
 #define POWUP_OBJECT_NUM 16
 
 #define POWUP_OBJECT_SIZE ( ( vec2 ) { 60.0f, 20.0f  } )
@@ -16,6 +20,17 @@
 #define POWUP_COL_PAD_SIZE_INCREASE ( ( vec3 ) { 1.0f, 0.6f, 0.4f } )
 #define POWUP_COL_CONFUSE           ( ( vec3 ) { 1.0f, 0.3f, 0.3f } )
 #define POWUP_COL_CHAOS             ( ( vec3 ) { 0.9f, 0.2f, 0.2f } )
+
+#define POWUP_EFF_DUR_SPEED             20.0f
+#define POWUP_EFF_DUR_STICKY            20.0f
+#define POWUP_EFF_DUR_PASS_THROUGH      10.0f
+#define POWUP_EFF_DUR_PAD_SIZE_INCREASE 10.0f
+#define POWUP_EFF_DUR_CONFUSE           15.0f
+#define POWUP_EFF_DUR_CHAOS             15.0f
+
+/******************************************************************************
+ *                                   TYPES                                    *
+ ******************************************************************************/
 
 typedef enum PowupType
 {
@@ -30,12 +45,25 @@ typedef enum PowupType
 
 typedef struct PowupManager
 {
-    GameObject obj      [POWUP_OBJECT_NUM];
-    PowupType  pu_types [POWUP_OBJECT_NUM];
+    GameObject obj        [POWUP_OBJECT_NUM];
+    PowupType  pu_types   [POWUP_OBJECT_NUM];
+
+    float      pu_effects [POWUP_COUNT];
 } PowupManager;
+
+/******************************************************************************
+ *                                  GENERAL                                   *
+ ******************************************************************************/
 
 // Initialize powup holder
 void powup_init( PowupManager* pu_man );
+
+// Update power-ups
+void powup_update( PowupManager* pu_man, float dt );
+
+/******************************************************************************
+ *                            POWER UP OBJECTS                                *
+ ******************************************************************************/
 
 // Respawn a new powerup pickup
 void powup_object_respawn(
@@ -47,10 +75,15 @@ void powup_object_respawn(
 // Respawn a new powerup pickup randomly
 void powup_object_respawn_random( PowupManager* pu_man, vec2 pos );
 
-// Update power-ups
-void powup_update( PowupManager* pu_man, float dt );
-
 // Render power-ups
 void powup_object_draw( PowupManager* pu_man );
+
+/******************************************************************************
+ *                            POWER UP EFFECTS                                *
+ ******************************************************************************/
+
+void powup_effect_set( PowupManager* pu_man, PowupType pu_type );
+
+bool powup_effect_get( PowupManager* pu_man, PowupType pu_type );
 
 #endif
