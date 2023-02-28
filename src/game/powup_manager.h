@@ -1,5 +1,5 @@
-#ifndef POWUP_HOLDER_H
-#define POWUP_HOLDER_H
+#ifndef POWUP_MANAGER_H
+#define POWUP_MANAGER_H
 
 #include <stdbool.h>
 

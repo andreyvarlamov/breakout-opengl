@@ -6,7 +6,7 @@
 #include "ball_object.h"
 #include "game_level.h"
 #include "game_object.h"
-#include "powup_holder.h"
+#include "powup_manager.h"
 
 #define GAME_LEVEL_NUM 4
 #define STARTING_LEVEL 0

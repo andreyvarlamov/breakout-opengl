@@ -16,7 +16,7 @@
 #include "collisions.h"
 #include "particle_manager.h"
 #include "post_proc.h"
-#include "powup_holder.h"
+#include "powup_manager.h"
 
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
