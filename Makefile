@@ -40,6 +40,7 @@ game_level.o \
 ball_object.o \
 collisions.o \
 particle_manager.o \
+post_proc.o \
 
 # Object dependencies
 # -------------------
@@ -102,6 +103,9 @@ game/game_object.h \
 PARTICLE_MANAGER_DEP = game/particle_manager.c game/particle_manager.h \
 game/game_object.h \
 
+POST_PROC_DEP = game/post_proc.c game/post_proc.h \
+gfx/renderer.h \
+
 # Build objects
 # -------------
 $(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
@@ -138,6 +142,9 @@ $(BIN)/collisions.o: $(addprefix $(SRC)/,$(COLLISIONS_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(BIN)/particle_manager.o: $(addprefix $(SRC)/,$(PARTICLE_MANAGER_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+$(BIN)/post_proc.o: $(addprefix $(SRC)/,$(POST_PROC_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util

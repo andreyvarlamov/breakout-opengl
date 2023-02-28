@@ -28,8 +28,11 @@ void renderer_framebuffer_unbind();
 // Initialize vao, shader, etc. to draw the scene
 void renderer_scene_init();
 
-// Draw the scene and applying post-processing (or not)
+// Draw the scene using the shader with post-processing
 void renderer_scene_draw();
+
+// Set scene shader uniforms that control post-proc effects every frame
+void renderer_set_post_proc_uniforms( bool shake, bool chaos, bool confuse );
 
 /******************************************************************************
  *                               QUAD RENDERING                               *

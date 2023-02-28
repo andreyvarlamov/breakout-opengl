@@ -169,6 +169,16 @@ void renderer_scene_draw()
     shader_use ( 0 );
 }
 
+void renderer_set_post_proc_uniforms( bool shake, bool chaos, bool confuse )
+{
+    GLuint shader = rm_shader_get( SHADER_SCENE );
+
+    shader_uniform_float( shader, "time",    glfwGetTime()   );
+    shader_uniform_int  ( shader, "shake",   ( int ) shake   );
+    shader_uniform_int  ( shader, "chaos",   ( int ) chaos   );
+    shader_uniform_int  ( shader, "confuse", ( int ) confuse );
+}
+
 /******************************************************************************
  *                               QUAD RENDERING                               *
  ******************************************************************************/

@@ -115,3 +115,9 @@ void shader_uniform_int( GLuint shader_id, const char* name, int num )
     GLint location = glGetUniformLocation( shader_id, name );
     glUniform1i( location, num );
 }
+
+void shader_uniform_float( GLuint shader_id, const char* name, float num )
+{
+    GLint location = glGetUniformLocation( shader_id, name );
+    glUniform1f( location, num );
+}
