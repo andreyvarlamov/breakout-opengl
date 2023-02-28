@@ -6,9 +6,10 @@
 #include "ball_object.h"
 #include "game_level.h"
 #include "game_object.h"
+#include "powup_holder.h"
 
 #define GAME_LEVEL_NUM 4
-#define STARTING_LEVEL 1
+#define STARTING_LEVEL 0
 
 typedef enum GameState
 {
@@ -27,6 +28,7 @@ typedef struct Game
     size_t current_level;
     GameObject player;
     BallObject ball;
+    PowupHolder powup_holder;
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)

@@ -1,8 +1,18 @@
 #include "powup_holder.h"
 
+#include <stdlib.h>
+
 #include <cglm/cglm.h>
 
 #include "../gfx/renderer.h"
+
+void powup_init( PowupHolder* powup_holder )
+{
+    for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
+    {
+        powup_holder->powups[i].destroyed = true;
+    }
+}
 
 void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos )
 {
@@ -81,6 +91,58 @@ void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos )
             powup_holder->powups[unused].color
         );
         powup_holder->powups[unused].tex_type = TEX_POWUP_CHAOS;
+    }
+}
+
+void powup_respawn_random( PowupHolder* powup_holder, vec2 pos )
+{
+    //unsigned int will_spawn = ( rand() % 15 ) == 0;
+    unsigned int will_spawn = ( rand() % 3 ) == 0;
+    //unsigned int will_spawn = true;
+    if ( will_spawn )
+    {
+        PowupType powup_type;
+        unsigned int good_or_bad = rand() % 4;
+        if ( good_or_bad == 0 )
+        {
+            // 1 in 4 chance to spawn a positive power up
+
+            // Equal chance to spawn any of the types
+            unsigned int type = rand() % 4;
+            if ( type == 0 )
+            {
+                powup_type = POWUP_SPEED;
+            }
+            else if ( type == 1 )
+            {
+                powup_type = POWUP_STICKY;
+            }
+            else if ( type == 2 )
+            {
+                powup_type = POWUP_PASS_THROUGH;
+            }
+            else
+            {
+                powup_type = POWUP_PAD_SIZE_INCREASE;
+            }
+        }
+        else
+        {
+            // 3 in 4 chance to spawn a negative power up
+            
+            // Equal chance to spawn either of the types
+            unsigned int type = rand() % 2;
+            if ( type == 0 )
+            {
+                powup_type = POWUP_CONFUSE;
+            }
+            else
+            {
+                powup_type = POWUP_CHAOS;
+            }
+        }
+
+        powup_respawn( powup_holder, powup_type, pos );
     }
 }
 

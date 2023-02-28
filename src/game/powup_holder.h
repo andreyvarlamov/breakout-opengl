@@ -34,8 +34,14 @@ typedef struct PowupHolder
     PowupType  powup_types [POWUP_OBJECT_NUM];
 } PowupHolder;
 
+// Initialize powup holder (need to set destroyed = true initially)
+void powup_init( PowupHolder* powup_holder );
+
 // Respawn a new powerup pickup
 void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos );
+
+// Respawn a new powerup pickup randomly
+void powup_respawn_random( PowupHolder* powup_holder, vec2 pos );
 
 // Update power-ups
 void powup_update( PowupHolder* powup_holder, float dt );
