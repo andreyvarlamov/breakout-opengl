@@ -127,7 +127,7 @@ void game_process_input( Game* game, float dt )
     }
 }
 
-static _shake_time = 0.0f;
+static float _shake_time = 0.0f;
 
 static void _do_collisions( Game* game )
 {

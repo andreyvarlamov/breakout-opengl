@@ -35,6 +35,8 @@ GLuint texture2d_generate(
 
     wrap_s = GL_REPEAT;
     wrap_t = GL_REPEAT;
+    // wrap_s = GL_CLAMP_TO_BORDER;
+    // wrap_t = GL_CLAMP_TO_BORDER;
     filter_min = GL_LINEAR;
     filter_mag = GL_LINEAR;
 

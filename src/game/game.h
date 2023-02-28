@@ -8,7 +8,7 @@
 #include "game_object.h"
 
 #define GAME_LEVEL_NUM 4
-#define STARTING_LEVEL 0
+#define STARTING_LEVEL 1
 
 typedef enum GameState
 {
