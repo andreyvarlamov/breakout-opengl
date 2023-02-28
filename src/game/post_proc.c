@@ -11,15 +11,29 @@ void post_proc_set_shake( bool enabled )
 
 void post_proc_set_chaos( bool enabled )
 {
-    _postProcState.chaos = enabled;
+    // Only one can be active at a time
+    if ( !_postProcState.confuse )
+    {
+        _postProcState.chaos = enabled;
+    }
 }
 
 void post_proc_set_confuse( bool enabled )
 {
-    _postProcState.confuse = enabled;
+    // Only one can be active at a time
+    if ( !_postProcState.chaos )
+    {
+        _postProcState.confuse = enabled;
+    }
 }
 
-// Update scene shader uniforms to enable post-proc effects
+void post_proc_reset_all  ()
+{
+    _postProcState.shake = false;
+    _postProcState.chaos = false;
+    _postProcState.confuse = false;
+}
+
 void post_proc_send_uniforms()
 {
     renderer_set_post_proc_uniforms(

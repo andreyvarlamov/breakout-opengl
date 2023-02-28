@@ -25,7 +25,7 @@
 #define BALL_RADIUS 12.5f
 #define BALL_INIT_VEL (vec2) { 125.0f, -450.0f }
 //#define BALL_INIT_VEL (vec2) { 100.0f, -350.0f }
-//#define BALL_INIT_VEL (vec2) { 0.0f, -100.0f }
+//#define BALL_INIT_VEL (vec2) { 0.0f, -300.0f }
 
 void game_init( Game* game, unsigned int width, unsigned int height )
 {
@@ -132,6 +132,77 @@ void game_process_input( Game* game, float dt )
     }
 }
 
+// TODO: How do I move this logic, so that powup manager manages what powups do
+static void _activate_powup( Game* game, PowupType pu_type )
+{
+    powup_effect_set( &game->powup_man, pu_type );
+
+    if ( pu_type == POWUP_SPEED )
+    {
+        glm_vec2_scale( game->ball.d.velocity, 1.2f, game->ball.d.velocity );
+    }
+    else if ( pu_type == POWUP_STICKY )
+    {
+        game->ball.sticky = true;
+        glm_vec3_copy( ( vec3 ) { 1.0f, 0.5f, 1.0f }, game->player.color );
+    }
+    else if ( pu_type == POWUP_PASS_THROUGH )
+    {
+        game->ball.pass_through = true;
+        glm_vec3_copy( ( vec3 ) { 1.0f, 0.5f, 0.5f }, game->ball.d.color );
+    }
+    else if ( pu_type == POWUP_PAD_SIZE_INCREASE )
+    {
+        game->player.size[0] += 50.0f;
+    }
+    else if ( pu_type == POWUP_CONFUSE )
+    {
+        post_proc_set_confuse( true );
+    }
+    else if ( pu_type == POWUP_CHAOS )
+    {
+        post_proc_set_chaos( true );
+    }
+}
+
+static void _check_powup_eff_timeout( Game* game )
+{
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_SPEED ) )
+    {
+        // float scale_down = 1.0f / 1.2f;
+        // glm_vec2_scale(
+        //     game->ball.d.velocity,
+        //     scale_down,
+        //     game->ball.d.velocity
+        // );
+    }
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_STICKY ) )
+    {
+        game->ball.sticky = false;
+        glm_vec3_copy( GLM_VEC3_ONE, game->player.color );
+    }
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_PASS_THROUGH ) )
+    {
+        game->ball.pass_through = false;
+        glm_vec3_copy( GLM_VEC3_ONE, game->ball.d.color );
+    }
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_PAD_SIZE_INCREASE ) )
+    {
+        // glm_vec2_copy(
+        //     ( vec2 ) { PLAYER_WIDTH, PLAYER_HEIGHT },
+        //     game->player.size
+        // );
+    }
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_CONFUSE ) )
+    {
+        post_proc_set_confuse( false );
+    }
+    if ( powup_effect_get_to_disable( &game->powup_man, POWUP_CHAOS ) )
+    {
+        post_proc_set_chaos( false );
+    }
+}
+
 static float _shake_time = 0.0f;
 
 static void _do_collisions( Game* game )
@@ -171,46 +242,55 @@ static void _do_collisions( Game* game )
 
                 // Collision resolution
                 // --------------------
-                if ( col.dir == LEFT || col.dir == RIGHT ) // horizontal col
+                // Only resolve collision if the ball doesn't have pass-through
+                // effect, unless it's solid, then ignore pass-through effect
+                if ( !game->ball.pass_through || bricks[i].is_solid )
                 {
-                    if (!vel_changed)
+                    if ( col.dir == LEFT || col.dir == RIGHT ) // horizontal col
                     {
-                        // Only want to invert velocity once per frame
-                        // But the rest of the collision resolution can
-                        // happen multiple times per frame, as we don't want
-                        // objects to overlap
-                        game->ball.d.velocity[0] = -game->ball.d.velocity[0];
-                        vel_changed = true;
-                    }
+                        if (!vel_changed)
+                        {
+                            // Only want to invert velocity once per frame
+                            // But the rest of the collision resolution can
+                            // happen multiple times per frame, as we don't want
+                            // objects to overlap
+                            game->ball.d.velocity[0] =
+                                -game->ball.d.velocity[0];
+                            vel_changed = true;
+                        }
 
-                    float penetration = game->ball.radius - fabs( col.diff[0] );
+                        float penetration =
+                            game->ball.radius - fabs( col.diff[0] );
 
-                    if ( col.dir == LEFT )
-                    {
-                        game->ball.d.position[0] -= penetration;
+                        if ( col.dir == LEFT )
+                        {
+                            game->ball.d.position[0] -= penetration;
+                        }
+                        else
+                        {
+                            game->ball.d.position[0] += penetration;
+                        }
                     }
-                    else
+                    else // vertical col
                     {
-                        game->ball.d.position[0] += penetration;
-                    }
-                }
-                else // vertical col
-                {
-                    if (!vel_changed)
-                    {
-                        game->ball.d.velocity[1] = -game->ball.d.velocity[1];
-                        vel_changed = true;
-                    }
+                        if (!vel_changed)
+                        {
+                            game->ball.d.velocity[1] =
+                                -game->ball.d.velocity[1];
+                            vel_changed = true;
+                        }
 
-                    float penetration = game->ball.radius - fabs( col.diff[1] );
+                        float penetration =
+                            game->ball.radius - fabs( col.diff[1] );
 
-                    if ( col.dir == UP )
-                    {
-                        game->ball.d.position[1] -= penetration;
-                    }
-                    else
-                    {
-                        game->ball.d.position[1] += penetration;
+                        if ( col.dir == UP )
+                        {
+                            game->ball.d.position[1] -= penetration;
+                        }
+                        else
+                        {
+                            game->ball.d.position[1] += penetration;
+                        }
                     }
                 }
             }
@@ -256,6 +336,8 @@ static void _do_collisions( Game* game )
                 old_length,
                 game->ball.d.velocity
             );
+
+            game->ball.stuck = game->ball.sticky;
         }
     }
 
@@ -280,7 +362,7 @@ static void _do_collisions( Game* game )
                 if ( col )
                 {
                     game->powup_man.obj[i].destroyed = true;
-                    // TODO: Active power up effect
+                    _activate_powup( game, game->powup_man.pu_types[i] );
                 }
             }
 
@@ -307,11 +389,13 @@ void game_update( Game* game, float dt )
         game_reset_levels( game );
         game_reset_player_and_ball( game );
         powup_init( &game->powup_man );
+        post_proc_reset_all();
     }
 
     // Update power up objects
     // -----------------------
     powup_update( &game->powup_man, dt );
+    _check_powup_eff_timeout( game );
     
     // Update particles
     // ----------------

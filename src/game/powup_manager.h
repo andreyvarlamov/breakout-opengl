@@ -12,7 +12,7 @@
 #define POWUP_OBJECT_NUM 16
 
 #define POWUP_OBJECT_SIZE ( ( vec2 ) { 60.0f, 20.0f  } )
-#define POWUP_OBJECT_VEL  ( ( vec2 ) { 0.0f,  150.0f } )
+#define POWUP_OBJECT_VEL  ( ( vec2 ) { 0.0f,  250.0f } )
 
 #define POWUP_COL_SPEED             ( ( vec3 ) { 0.5f, 0.5f, 1.0f } )
 #define POWUP_COL_STICKY            ( ( vec3 ) { 1.0f, 0.5f, 1.0f } )
@@ -21,12 +21,12 @@
 #define POWUP_COL_CONFUSE           ( ( vec3 ) { 1.0f, 0.3f, 0.3f } )
 #define POWUP_COL_CHAOS             ( ( vec3 ) { 0.9f, 0.2f, 0.2f } )
 
-#define POWUP_EFF_DUR_SPEED             20.0f
-#define POWUP_EFF_DUR_STICKY            20.0f
-#define POWUP_EFF_DUR_PASS_THROUGH      10.0f
-#define POWUP_EFF_DUR_PAD_SIZE_INCREASE 10.0f
-#define POWUP_EFF_DUR_CONFUSE           15.0f
-#define POWUP_EFF_DUR_CHAOS             15.0f
+#define POWUP_EFF_DUR_SPEED             0.0f
+#define POWUP_EFF_DUR_STICKY            10.0f
+#define POWUP_EFF_DUR_PASS_THROUGH      5.0f
+#define POWUP_EFF_DUR_PAD_SIZE_INCREASE 8.0f
+#define POWUP_EFF_DUR_CONFUSE           4.0f
+#define POWUP_EFF_DUR_CHAOS             4.0f
 
 /******************************************************************************
  *                                   TYPES                                    *
@@ -49,6 +49,7 @@ typedef struct PowupManager
     PowupType  pu_types   [POWUP_OBJECT_NUM];
 
     float      pu_effects [POWUP_COUNT];
+    bool       to_disable [POWUP_COUNT];
 } PowupManager;
 
 /******************************************************************************
@@ -84,6 +85,6 @@ void powup_object_draw( PowupManager* pu_man );
 
 void powup_effect_set( PowupManager* pu_man, PowupType pu_type );
 
-bool powup_effect_get( PowupManager* pu_man, PowupType pu_type );
+bool powup_effect_get_to_disable( PowupManager* pu_man, PowupType pu_type );
 
 #endif

@@ -13,6 +13,7 @@ typedef struct PostProcState
 void post_proc_set_shake  ( bool enabled );
 void post_proc_set_chaos  ( bool enabled );
 void post_proc_set_confuse( bool enabled );
+void post_proc_reset_all  ();
 
 // Update scene shader uniforms to enable post-proc effects
 void post_proc_send_uniforms();

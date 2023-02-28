@@ -22,6 +22,11 @@ void powup_init( PowupManager* pu_man )
     {
         pu_man->pu_effects[i] = 0.0f;
     }
+
+    for ( size_t i = 0; i < POWUP_COUNT; i++ )
+    {
+        pu_man->to_disable[i] = false;
+    }
 }
 
 void powup_update( PowupManager* pu_man, float dt )
@@ -48,6 +53,7 @@ void powup_update( PowupManager* pu_man, float dt )
             if ( pu_man->pu_effects[i] <= 0.0f )
             {
                 pu_man->pu_effects[i] = 0.0f;
+                pu_man->to_disable[i] = true;
             }
         }
     }
@@ -234,7 +240,7 @@ void powup_effect_set( PowupManager* pu_man, PowupType pu_type )
     {
         dur = POWUP_EFF_DUR_CONFUSE;
     }
-    else if ( pu_type == POWUP_CONFUSE )
+    else if ( pu_type == POWUP_CHAOS )
     {
         dur = POWUP_EFF_DUR_CHAOS;
     }
@@ -242,7 +248,12 @@ void powup_effect_set( PowupManager* pu_man, PowupType pu_type )
     pu_man->pu_effects[pu_type] = dur;
 }
 
-bool powup_effect_get( PowupManager* pu_man, PowupType pu_type )
+bool powup_effect_get_to_disable( PowupManager* pu_man, PowupType pu_type )
 {
-    return pu_man->pu_effects[pu_type] > 0.0f;
+    bool to_disable = pu_man->to_disable[pu_type];
+    if ( to_disable )
+    {
+        pu_man->to_disable[pu_type] = false;
+    }
+    return to_disable;
 }

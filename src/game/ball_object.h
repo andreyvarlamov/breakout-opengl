@@ -10,6 +10,8 @@ typedef struct BallObject
     GameObject d;
     float radius;
     bool stuck;
+    bool sticky;
+    bool pass_through;
 } BallObject;
 
 BallObject ball_object_create(

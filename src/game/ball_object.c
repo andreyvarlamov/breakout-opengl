@@ -20,6 +20,8 @@ BallObject ball_object_create(
 
     ball.radius = radius;
     ball.stuck = true;
+    ball.sticky = false;
+    ball.pass_through = false;
 
     return ball;
 }
