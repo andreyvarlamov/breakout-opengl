@@ -6,20 +6,20 @@
 
 #include "../gfx/renderer.h"
 
-void powup_init( PowupHolder* powup_holder )
+void powup_init( PowupManager* pu_man )
 {
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
     {
-        powup_holder->powups[i].destroyed = true;
+        pu_man->obj[i].destroyed = true;
     }
 }
 
-void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos )
+void powup_object_respawn( PowupManager* pu_man, PowupType pu_type, vec2 pos )
 {
     size_t unused = -1;
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
     {
-        if ( powup_holder->powups[i].destroyed )
+        if ( pu_man->obj[i].destroyed )
         {
             unused = i;
             break;
@@ -32,76 +32,76 @@ void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos )
         return;
     }
 
-    if ( ( ( unsigned int ) powup_type ) >=  POWUP_COUNT )
+    if ( ( ( unsigned int ) pu_type ) >=  POWUP_COUNT )
     {
         // Invalid powup type, skip
         return;
     }
 
-    powup_holder->powups[unused].destroyed = false;
-    powup_holder->powup_types[unused] = powup_type;
-    glm_vec2_copy( pos,               powup_holder->powups[unused].position );
-    glm_vec2_copy( POWUP_OBJECT_SIZE, powup_holder->powups[unused].size );
-    glm_vec2_copy( POWUP_OBJECT_VEL,  powup_holder->powups[unused].velocity );
+    pu_man->obj[unused].destroyed = false;
+    pu_man->pu_types[unused] = pu_type;
+    glm_vec2_copy( pos,               pu_man->obj[unused].position );
+    glm_vec2_copy( POWUP_OBJECT_SIZE, pu_man->obj[unused].size );
+    glm_vec2_copy( POWUP_OBJECT_VEL,  pu_man->obj[unused].velocity );
 
-    if ( powup_type == POWUP_SPEED )
+    if ( pu_type == POWUP_SPEED )
     {
         glm_vec3_copy(
             POWUP_COL_SPEED,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_SPEED;
+        pu_man->obj[unused].tex_type = TEX_POWUP_SPEED;
     }
-    else if ( powup_type == POWUP_STICKY )
+    else if ( pu_type == POWUP_STICKY )
     {
         glm_vec3_copy(
             POWUP_COL_STICKY,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_STICKY;
+        pu_man->obj[unused].tex_type = TEX_POWUP_STICKY;
     }
-    else if ( powup_type == POWUP_PASS_THROUGH )
+    else if ( pu_type == POWUP_PASS_THROUGH )
     {
         glm_vec3_copy(
             POWUP_COL_PASS_THROUGH,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_PASS_THROUGH;
+        pu_man->obj[unused].tex_type = TEX_POWUP_PASS_THROUGH;
     }
-    else if ( powup_type == POWUP_PAD_SIZE_INCREASE )
+    else if ( pu_type == POWUP_PAD_SIZE_INCREASE )
     {
         glm_vec3_copy(
             POWUP_COL_PAD_SIZE_INCREASE,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_PAD_SIZE_INCREASE;
+        pu_man->obj[unused].tex_type = TEX_POWUP_PAD_SIZE_INCREASE;
     }
-    else if ( powup_type == POWUP_CONFUSE )
+    else if ( pu_type == POWUP_CONFUSE )
     {
         glm_vec3_copy(
             POWUP_COL_CONFUSE,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_CONFUSE;
+        pu_man->obj[unused].tex_type = TEX_POWUP_CONFUSE;
     }
-    else if ( powup_type == POWUP_CHAOS )
+    else if ( pu_type == POWUP_CHAOS )
     {
         glm_vec3_copy(
             POWUP_COL_CHAOS,
-            powup_holder->powups[unused].color
+            pu_man->obj[unused].color
         );
-        powup_holder->powups[unused].tex_type = TEX_POWUP_CHAOS;
+        pu_man->obj[unused].tex_type = TEX_POWUP_CHAOS;
     }
 }
 
-void powup_respawn_random( PowupHolder* powup_holder, vec2 pos )
+void powup_object_respawn_random( PowupManager* pu_man, vec2 pos )
 {
     //unsigned int will_spawn = ( rand() % 15 ) == 0;
     unsigned int will_spawn = ( rand() % 3 ) == 0;
     //unsigned int will_spawn = true;
     if ( will_spawn )
     {
-        PowupType powup_type;
+        PowupType pu_type;
         unsigned int good_or_bad = rand() % 4;
         if ( good_or_bad == 0 )
         {
@@ -111,19 +111,19 @@ void powup_respawn_random( PowupHolder* powup_holder, vec2 pos )
             unsigned int type = rand() % 4;
             if ( type == 0 )
             {
-                powup_type = POWUP_SPEED;
+                pu_type = POWUP_SPEED;
             }
             else if ( type == 1 )
             {
-                powup_type = POWUP_STICKY;
+                pu_type = POWUP_STICKY;
             }
             else if ( type == 2 )
             {
-                powup_type = POWUP_PASS_THROUGH;
+                pu_type = POWUP_PASS_THROUGH;
             }
             else
             {
-                powup_type = POWUP_PAD_SIZE_INCREASE;
+                pu_type = POWUP_PAD_SIZE_INCREASE;
             }
         }
         else
@@ -134,47 +134,47 @@ void powup_respawn_random( PowupHolder* powup_holder, vec2 pos )
             unsigned int type = rand() % 2;
             if ( type == 0 )
             {
-                powup_type = POWUP_CONFUSE;
+                pu_type = POWUP_CONFUSE;
             }
             else
             {
-                powup_type = POWUP_CHAOS;
+                pu_type = POWUP_CHAOS;
             }
         }
 
-        powup_respawn( powup_holder, powup_type, pos );
+        powup_object_respawn( pu_man, pu_type, pos );
     }
 }
 
-void powup_update( PowupHolder* powup_holder, float dt )
+void powup_update( PowupManager* pu_man, float dt )
 {
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
     {
-        if ( !powup_holder->powups[i].destroyed )
+        if ( !pu_man->obj[i].destroyed )
         {
             vec2 scaled_vel;
-            glm_vec2_scale( powup_holder->powups[i].velocity, dt, scaled_vel );
+            glm_vec2_scale( pu_man->obj[i].velocity, dt, scaled_vel );
             glm_vec2_add(
-                powup_holder->powups[i].position,
+                pu_man->obj[i].position,
                 scaled_vel,
-                powup_holder->powups[i].position
+                pu_man->obj[i].position
             );
         }
     }
 }
 
-void powup_draw( PowupHolder* powup_holder )
+void powup_object_draw( PowupManager* pu_man )
 {
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
     {
-        if ( !powup_holder->powups[i].destroyed )
+        if ( !pu_man->obj[i].destroyed )
         {
             renderer_quad_draw(
-                powup_holder->powups[i].tex_type,
-                powup_holder->powups[i].position,
-                powup_holder->powups[i].size,
-                powup_holder->powups[i].rotation,
-                powup_holder->powups[i].color
+                pu_man->obj[i].tex_type,
+                pu_man->obj[i].position,
+                pu_man->obj[i].size,
+                pu_man->obj[i].rotation,
+                pu_man->obj[i].color
             );
         }
     }

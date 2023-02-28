@@ -28,7 +28,7 @@ typedef struct Game
     size_t current_level;
     GameObject player;
     BallObject ball;
-    PowupHolder powup_holder;
+    PowupManager powup_man;
 } Game;
 
 // Initialize game state (load all shaders/textures/levels)

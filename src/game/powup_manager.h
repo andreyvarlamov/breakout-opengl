@@ -28,25 +28,29 @@ typedef enum PowupType
     POWUP_COUNT
 } PowupType;
 
-typedef struct PowupHolder
+typedef struct PowupManager
 {
-    GameObject powups      [POWUP_OBJECT_NUM];
-    PowupType  powup_types [POWUP_OBJECT_NUM];
-} PowupHolder;
+    GameObject obj      [POWUP_OBJECT_NUM];
+    PowupType  pu_types [POWUP_OBJECT_NUM];
+} PowupManager;
 
-// Initialize powup holder (need to set destroyed = true initially)
-void powup_init( PowupHolder* powup_holder );
+// Initialize powup holder
+void powup_init( PowupManager* pu_man );
 
 // Respawn a new powerup pickup
-void powup_respawn( PowupHolder* powup_holder, PowupType powup_type, vec2 pos );
+void powup_object_respawn(
+    PowupManager* pu_man,
+    PowupType pu_type,
+    vec2 pos
+);
 
 // Respawn a new powerup pickup randomly
-void powup_respawn_random( PowupHolder* powup_holder, vec2 pos );
+void powup_object_respawn_random( PowupManager* pu_man, vec2 pos );
 
 // Update power-ups
-void powup_update( PowupHolder* powup_holder, float dt );
+void powup_update( PowupManager* pu_man, float dt );
 
 // Render power-ups
-void powup_draw( PowupHolder* powup_holder );
+void powup_object_draw( PowupManager* pu_man );
 
 #endif

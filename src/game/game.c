@@ -87,7 +87,7 @@ void game_init( Game* game, unsigned int width, unsigned int height )
 
     // Init power up holder
     // --------------------
-    powup_init( &game->powup_holder );
+    powup_init( &game->powup_man );
 
     // Init particle manager
     // ---------------------
@@ -157,8 +157,8 @@ static void _do_collisions( Game* game )
                 if ( !bricks[i].is_solid )
                 {
                     bricks[i].destroyed = true;
-                    powup_respawn_random(
-                        &game->powup_holder,
+                    powup_object_respawn_random(
+                        &game->powup_man,
                         bricks[i].position
                     );
                 }
@@ -263,23 +263,23 @@ static void _do_collisions( Game* game )
     // --------------------------------------------
     for ( size_t i = 0; i < POWUP_OBJECT_NUM; i++ )
     {
-        if ( !game->powup_holder.powups[i].destroyed )
+        if ( !game->powup_man.obj[i].destroyed )
         {
-            if ( game->powup_holder.powups[i].position[1] >= game->height )
+            if ( game->powup_man.obj[i].position[1] >= game->height )
             {
                 // Reached the bottom, destroy
-                game->powup_holder.powups[i].destroyed = true;
+                game->powup_man.obj[i].destroyed = true;
             }
             else
             {
                 bool col = col_check_rects(
                     game->player,
-                    game->powup_holder.powups[i]
+                    game->powup_man.obj[i]
                 );
 
                 if ( col )
                 {
-                    game->powup_holder.powups[i].destroyed = true;
+                    game->powup_man.obj[i].destroyed = true;
                     // TODO: Active power up effect
                 }
             }
@@ -306,12 +306,12 @@ void game_update( Game* game, float dt )
     {
         game_reset_levels( game );
         game_reset_player_and_ball( game );
-        powup_init( &game->powup_holder );
+        powup_init( &game->powup_man );
     }
 
     // Update power up objects
     // -----------------------
-    powup_update( &game->powup_holder, dt );
+    powup_update( &game->powup_man, dt );
     
     // Update particles
     // ----------------
@@ -367,7 +367,7 @@ void game_render( Game* game )
 
     // Render power up objects
     // -----------------------
-    powup_draw( &game->powup_holder );
+    powup_object_draw( &game->powup_man );
 
     // Render particle effects
     // -----------------------
