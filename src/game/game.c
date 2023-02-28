@@ -15,6 +15,7 @@
 #include "../gfx/tex_type.h"
 #include "collisions.h"
 #include "particle_manager.h"
+#include "post_proc.h"
 
 #define PLAYER_WIDTH 100.0f
 #define PLAYER_HEIGHT 20.0f
@@ -126,6 +127,8 @@ void game_process_input( Game* game, float dt )
     }
 }
 
+static _shake_time = 0.0f;
+
 static void _do_collisions( Game* game )
 {
     // Check collisions between bricks and ball
@@ -149,6 +152,12 @@ static void _do_collisions( Game* game )
                 if ( !bricks[i].is_solid )
                 {
                     bricks[i].destroyed = true;
+                }
+                else
+                {
+                    // If block is solid, enable shake effect
+                    _shake_time = 0.05f;
+                    post_proc_set_shake( true );
                 }
 
                 // Collision resolution
@@ -268,6 +277,17 @@ void game_update( Game* game, float dt )
         2, // 2 new particles per frame
         ( vec2 ) { game->ball.radius / 2.0f, game->ball.radius / 2.0f }
     );
+
+    // Update effects
+    // --------------
+    if (_shake_time > 0.0f)
+    {
+        _shake_time -= dt;
+        if ( _shake_time <= 0.0f )
+        {
+            post_proc_set_shake( false );
+        }
+    }
 }
 
 void game_render( Game* game )
@@ -319,6 +339,10 @@ void game_render( Game* game )
     // onto the default on-screen framebuffer
     // --------------------------------------
     renderer_framebuffer_unbind();
+
+    // Send post-processing settings to scene shader
+    // ---------------------------------------------
+    post_proc_send_uniforms();
 
     // Render the actual scene onto the screen
     // ---------------------------------------

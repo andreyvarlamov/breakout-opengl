@@ -60,6 +60,7 @@ game/game_object.h \
 game/ball_object.h \
 game/collisions.h \
 game/particle_manager.h \
+game/post_proc.h \
 
 SHADER_DEP = gfx/shader.c gfx/shader.h \
 gfx/gfx.h \

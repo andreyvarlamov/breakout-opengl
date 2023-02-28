@@ -151,6 +151,53 @@ void renderer_scene_init()
     );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
+
+    // Provide constant uniforms to scene shader
+    // ----------------------------------------
+    GLuint shader = rm_shader_get( SHADER_SCENE );
+    shader_use( shader );
+
+    shader_uniform_int( shader, "scene", 0 );
+
+    float offset = 1.0f / 300.0f;
+    float offsets[9][2] = {
+        { -offset,  offset }, // top-left
+        {  0.0f,    offset }, // top-center
+        {  offset,  offset }, // top-right
+        { -offset,  0.0f   }, // center-left
+        {  0.0f,    0.0f   }, // center-center
+        {  offset,  0.0f   }, // center-right
+        { -offset, -offset }, // bottom-left
+        {  0.0f,   -offset }, // bottom-center
+        {  offset, -offset }  // bottom-center
+    };
+    glUniform2fv(
+        glGetUniformLocation( shader, "offsets" ),
+        9, ( float* ) offsets
+    );
+
+    int edge_kernel[9] = {
+        -1, -1, -1,
+        -1,  8, -1,
+        -1, -1, -1
+    };
+    glUniform1iv(
+        glGetUniformLocation( shader, "edge_kernel" ),
+        9, edge_kernel
+    );
+
+    float blur_kernel[9] = {
+        1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f,
+        2.0f / 16.0f, 4.0f / 16.0f, 2.0f / 16.0f,
+        1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f
+    };
+    glUniform1fv(
+        glGetUniformLocation( shader, "blur_kernel" ),
+        9, blur_kernel
+    );
+
+    // Unload the shader
+    shader_use ( 0 );
 }
 
 void renderer_scene_draw()
@@ -172,11 +219,14 @@ void renderer_scene_draw()
 void renderer_set_post_proc_uniforms( bool shake, bool chaos, bool confuse )
 {
     GLuint shader = rm_shader_get( SHADER_SCENE );
+    shader_use( shader );
 
     shader_uniform_float( shader, "time",    glfwGetTime()   );
     shader_uniform_int  ( shader, "shake",   ( int ) shake   );
     shader_uniform_int  ( shader, "chaos",   ( int ) chaos   );
     shader_uniform_int  ( shader, "confuse", ( int ) confuse );
+
+    shader_use( 0 );
 }
 
 /******************************************************************************
