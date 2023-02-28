@@ -97,12 +97,18 @@ void rm_shader_load_all()
 
 void rm_tex_load_all()
 {
-    _tex_load( "res/textures/awesomeface.png", true, TEX_FACE );
-    _tex_load( "res/textures/block.png", false, TEX_BLOCK );
-    _tex_load( "res/textures/block_solid.png", false, TEX_BLOCK_SOLID );
-    _tex_load( "res/textures/background.png", false, TEX_BACKGROUND );
-    _tex_load( "res/textures/paddle.png", true, TEX_PADDLE );
-    _tex_load( "res/textures/particle.png", true, TEX_PARTICLE );
+    _tex_load( "res/textures/awesomeface.png",         true,  TEX_FACE );
+    _tex_load( "res/textures/block.png",               false, TEX_BLOCK );
+    _tex_load( "res/textures/block_solid.png",         false, TEX_BLOCK_SOLID );
+    _tex_load( "res/textures/background.png",          false, TEX_BACKGROUND );
+    _tex_load( "res/textures/paddle.png",              true,  TEX_PADDLE );
+    _tex_load( "res/textures/particle.png",            true,  TEX_PARTICLE );
+    _tex_load( "res/textures/powerup_speed.png",       true,  TEX_POWUP_SPEED );
+    _tex_load( "res/textures/powerup_sticky.png",      true,  TEX_POWUP_STICKY );
+    _tex_load( "res/textures/powerup_passthrough.png", true,  TEX_POWUP_PASS_THROUGH );
+    _tex_load( "res/textures/powerup_increase.png",    true,  TEX_POWUP_PAD_SIZE_INCREASE );
+    _tex_load( "res/textures/powerup_confuse.png",     true,  TEX_POWUP_CONFUSE );
+    _tex_load( "res/textures/powerup_chaos.png",       true,  TEX_POWUP_CHAOS );
 }
 
 GLuint rm_shader_get( ShaderType shader_type )

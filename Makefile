@@ -41,6 +41,7 @@ ball_object.o \
 collisions.o \
 particle_manager.o \
 post_proc.o \
+powup_holder.o \
 
 # Object dependencies
 # -------------------
@@ -107,6 +108,10 @@ game/game_object.h \
 POST_PROC_DEP = game/post_proc.c game/post_proc.h \
 gfx/renderer.h \
 
+POWUP_HOLDER_DEP = game/powup_holder.c game/powup_holder.h \
+game/game_object.h \
+gfx/renderer.h \
+
 # Build objects
 # -------------
 $(BIN)/main.o: $(addprefix $(SRC)/,$(MAIN_DEP))
@@ -146,6 +151,9 @@ $(BIN)/particle_manager.o: $(addprefix $(SRC)/,$(PARTICLE_MANAGER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(BIN)/post_proc.o: $(addprefix $(SRC)/,$(POST_PROC_DEP))
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+$(BIN)/powup_holder.o: $(addprefix $(SRC)/,$(POWUP_HOLDER_DEP))
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # Main targets + Util

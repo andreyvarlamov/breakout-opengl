@@ -3,6 +3,8 @@
 
 #define BRICKS_INIT_CAP 256
 
+#include <stdlib.h>
+
 #include "game_object.h"
 
 typedef struct GameLevel
