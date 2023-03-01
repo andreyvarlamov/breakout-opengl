@@ -24,7 +24,7 @@
 #define POWUP_EFF_DUR_SPEED             0.0f
 #define POWUP_EFF_DUR_STICKY            10.0f
 #define POWUP_EFF_DUR_PASS_THROUGH      5.0f
-#define POWUP_EFF_DUR_PAD_SIZE_INCREASE 8.0f
+#define POWUP_EFF_DUR_PAD_SIZE_INCREASE 0.0f
 #define POWUP_EFF_DUR_CONFUSE           4.0f
 #define POWUP_EFF_DUR_CHAOS             4.0f
 
